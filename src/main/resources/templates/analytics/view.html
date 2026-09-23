@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Platform Analytics - ProblemHub')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                <div>
+                    <span class="badge bg-light text-primary border px-3 py-1 fw-bold text-uppercase mb-1">Data Insights</span>
+                    <h1 class="h2 fw-bold text-navy mb-0">ProblemHub Platform Analytics</h1>
+                    <p class="text-muted-custom small mb-0">Real-time metrics on authentic challenges, technology adoption, and student project impact.</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <a th:href="@{/problems}" class="btn btn-primary-custom btn-sm">
+                        <i class="bi bi-compass me-1"></i> Explore Problems
+                    </a>
+                </div>
+            </div>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Summary KPI Cards -->
+            <div class="row g-3 mb-5">
+                <div class="col-lg-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" th:text="${stats.totalProblems}">11</div>
+                        <div class="stat-label">Problem Statements</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number text-primary" th:text="${stats.totalProjects}">3</div>
+                        <div class="stat-label">Student Projects</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number text-success" th:text="${stats.totalSolutions}">2</div>
+                        <div class="stat-label">Solutions Preserved</div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number text-secondary" th:text="${stats.totalOrganizations}">5</div>
+                        <div class="stat-label">Source Organizations</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 1: Domain Distribution & Difficulty Breakdown -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-7">
+                    <div class="card-custom p-4 bg-white h-100">
+                        <h5 class="fw-bold text-navy mb-3"><i class="bi bi-pie-chart-fill text-primary me-2"></i> Problems by Domain</h5>
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="domainChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="card-custom p-4 bg-white h-100">
+                        <h5 class="fw-bold text-navy mb-3"><i class="bi bi-bar-chart-fill text-success me-2"></i> Problems by Difficulty</h5>
+                        <div style="height: 300px; position: relative;">
+                            <canvas id="difficultyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 2: Project Types & Popular Technologies -->
+            <div class="row g-4 mb-4">
+                <div class="col-lg-5">
+                    <div class="card-custom p-4 bg-white h-100">
+                        <h5 class="fw-bold text-navy mb-3"><i class="bi bi-diagram-2-fill text-warning me-2"></i> Problems by Project Type</h5>
+                        <div style="height: 280px; position: relative;">
+                            <canvas id="projectTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="card-custom p-4 bg-white h-100">
+                        <h5 class="fw-bold text-navy mb-3"><i class="bi bi-code-square text-info me-2"></i> Most In-Demand Technologies</h5>
+                        <div style="height: 280px; position: relative;">
+                            <canvas id="techChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rankings Row: Most Viewed & Most Solved Problems -->
+            <div class="row g-4">
+                <!-- Most Viewed -->
+                <div class="col-lg-6">
+                    <div class="card-custom p-4 bg-white h-100">
+                        <h5 class="fw-bold text-navy mb-3"><i class="bi bi-eye-fill text-primary me-2"></i> Most Viewed Problems</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Problem</th>
+                                        <th>Domain</th>
+                                        <th class="text-end">Views</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${mostViewed}">
+                                        <td>
+                                            <a th:href="@{'/problems/' + ${item.id}}" class="text-decoration-none fw-semibold text-navy" th:text="${item.title}">
+                                                Problem Title
+                                            </a>
+                                        </td>
+                                        <td><span class="badge-domain" th:text="${item.domain}">Domain</span></td>
+                                        <td class="text-end fw-bold text-primary" th:text="${item.views}">120</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Most Solved -->
+                <div class="col-lg-6">
+                    <div class="card-custom p-4 bg-white h-100">
+                        <h5 class="fw-bold text-navy mb-3"><i class="bi bi-patch-check-fill text-success me-2"></i> Most Solved Challenges</h5>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle mb-0">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Problem</th>
+                                        <th>Domain</th>
+                                        <th class="text-end">Batches Solved</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="item : ${mostSolved}">
+                                        <td>
+                                            <a th:href="@{'/problems/' + ${item.id}}" class="text-decoration-none fw-semibold text-navy" th:text="${item.title}">
+                                                Problem Title
+                                            </a>
+                                        </td>
+                                        <td><span class="badge-domain" th:text="${item.domain}">Domain</span></td>
+                                        <td class="text-end fw-bold text-success" th:text="${item.solvedCount}">1</td>
+                                    </tr>
+                                    <tr th:if="${#lists.isEmpty(mostSolved)}">
+                                        <td colspan="3" class="text-center text-muted small py-3">No multiple solutions recorded yet.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+
+    <!-- Render Dynamic Charts -->
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart 1: Domain Distribution
+            const domainData = /*[[${domainData}]]*/ {};
+            const domainLabels = Object.keys(domainData);
+            const domainCounts = Object.values(domainData);
+
+            new Chart(document.getElementById('domainChart'), {
+                type: 'bar',
+                data: {
+                    labels: domainLabels,
+                    datasets: [{
+                        label: 'Problem Count',
+                        data: domainCounts,
+                        backgroundColor: '#2563EB',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { precision: 0 } },
+                        x: { ticks: { maxRotation: 45, minRotation: 0 } }
+                    }
+                }
+            });
+
+            // Chart 2: Difficulty Distribution
+            const diffData = /*[[${difficultyData}]]*/ {};
+            const diffLabels = Object.keys(diffData);
+            const diffCounts = Object.values(diffData);
+
+            new Chart(document.getElementById('difficultyChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: diffLabels,
+                    datasets: [{
+                        data: diffCounts,
+                        backgroundColor: ['#16A34A', '#F59E0B', '#EF4444'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Chart 3: Project Type
+            const typeData = /*[[${projectTypeData}]]*/ {};
+            const typeLabels = Object.keys(typeData);
+            const typeCounts = Object.values(typeData);
+
+            new Chart(document.getElementById('projectTypeChart'), {
+                type: 'pie',
+                data: {
+                    labels: typeLabels,
+                    datasets: [{
+                        data: typeCounts,
+                        backgroundColor: ['#3B82F6', '#8B5CF6', '#EC4899', '#10B981'],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'bottom' } }
+                }
+            });
+
+            // Chart 4: Popular Technologies
+            const techData = /*[[${techData}]]*/ {};
+            const techLabels = Object.keys(techData);
+            const techCounts = Object.values(techData);
+
+            new Chart(document.getElementById('techChart'), {
+                type: 'bar',
+                data: {
+                    labels: techLabels,
+                    datasets: [{
+                        label: 'Mentioned in Problems',
+                        data: techCounts,
+                        backgroundColor: '#0284C7',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        x: { beginAtZero: true, ticks: { precision: 0 } }
+                    }
+                }
+            });
+        });
+        /*]]>*/
+    </script>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header(${project.title})}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container" style="max-width: 860px;">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/projects/my}" class="text-decoration-none">My Projects</a></li>
+                    <li class="breadcrumb-item active text-truncate" style="max-width: 350px;" aria-current="page" th:text="${project.title}">Project Details</li>
+                </ol>
+            </nav>
+
+            <div class="card-custom p-4 p-md-5 bg-white mb-4 shadow-sm">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <span th:class="${project.status == 'COMPLETED' ? 'badge bg-success-subtle text-success border border-success-subtle' : (project.status == 'IN_PROGRESS' ? 'badge bg-primary-subtle text-primary border border-primary-subtle' : 'badge bg-warning-subtle text-dark border border-warning-subtle')}"
+                          th:text="${project.status}">IN_PROGRESS</span>
+                    <span class="text-muted small">Started on: <strong th:text="${project.startDate}">2026-01-15</strong></span>
+                </div>
+
+                <h1 class="h2 fw-bold text-navy mb-2" th:text="${project.title}">Project Title</h1>
+
+                <div class="text-muted small mb-4 pb-3 border-bottom">
+                    Solving Problem:
+                    <a th:href="@{'/problems/' + ${project.problemId}}" class="text-primary fw-semibold text-decoration-none" th:text="${project.problemTitle}">
+                        Problem Statement Title
+                    </a>
+                </div>
+
+                <!-- Progress Section -->
+                <div class="card p-3 bg-light border-0 mb-4">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="fw-bold text-navy small">Development Progress</span>
+                        <span class="badge bg-primary fs-6" th:text="${project.progressPercent + '%'}">65%</span>
+                    </div>
+                    <div class="progress progress-custom" style="height: 10px;">
+                        <div class="progress-bar progress-bar-custom" role="progressbar"
+                             th:style="'width: ' + ${project.progressPercent} + '%;'"
+                             th:aria-valuenow="${project.progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
+                    </div>
+                </div>
+
+                <!-- Team Members & Tech -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-white">
+                            <div class="text-muted small fw-semibold mb-1"><i class="bi bi-people me-1"></i> Team Members</div>
+                            <div class="text-navy fw-semibold" th:text="${project.teamMembers}">Team Names</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="p-3 border rounded bg-white">
+                            <div class="text-muted small fw-semibold mb-1"><i class="bi bi-code-slash me-1"></i> Tech Stack</div>
+                            <div class="text-navy fw-semibold" th:text="${project.technologiesUsed}">Java, MySQL</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Project Description -->
+                <div class="mb-4" th:if="${project.description}">
+                    <h5 class="fw-bold text-navy mb-2">Project Approach &amp; Details</h5>
+                    <p class="text-muted-custom leading-relaxed" style="white-space: pre-line;" th:text="${project.description}">
+                        Description...
+                    </p>
+                </div>
+
+                <!-- Links Row -->
+                <div class="d-flex flex-wrap gap-2 pt-3 border-top mb-4">
+                    <a th:if="${project.repoUrl}" th:href="${project.repoUrl}" target="_blank" class="btn btn-outline-dark btn-sm">
+                        <i class="bi bi-github me-1"></i> View Repository
+                    </a>
+                    <a th:if="${project.documentationUrl}" th:href="${project.documentationUrl}" target="_blank" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-file-earmark-pdf me-1"></i> View Documentation
+                    </a>
+                    <a th:href="@{'/solutions/new?projectId=' + ${project.id}}" class="btn btn-primary-custom btn-sm ms-auto">
+                        <i class="bi bi-check2-circle me-1"></i> Archive Solution
+                    </a>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-center">
+                    <a th:href="@{/projects/my}" class="btn btn-outline-secondary btn-sm">
+                        &larr; Back to My Projects
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

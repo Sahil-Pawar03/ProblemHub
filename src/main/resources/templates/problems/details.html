@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header(${problem.title})}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/problems}" class="text-decoration-none">Explore Problems</a></li>
+                    <li class="breadcrumb-item active text-truncate" style="max-width: 350px;" aria-current="page" th:text="${problem.title}">Problem Details</li>
+                </ol>
+            </nav>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <div class="row g-4">
+                <!-- Left Main Content Column -->
+                <div class="col-lg-8">
+                    <!-- Title & Header Card -->
+                    <div class="card-custom p-4 p-md-5 mb-4 bg-white">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                            <span class="badge-domain fs-6" th:text="${problem.domain}">Environment</span>
+                            <span class="badge bg-light text-dark border" th:text="${problem.projectType}">Major Project</span>
+                            <span th:class="${problem.difficulty == 'Beginner' ? 'badge-difficulty-beginner' : (problem.difficulty == 'Intermediate' ? 'badge-difficulty-intermediate' : 'badge-difficulty-advanced')}"
+                                  th:text="${problem.difficulty}">Intermediate</span>
+                            <span th:if="${problem.verified}" class="badge bg-primary-subtle text-primary border border-primary-subtle d-inline-flex align-items-center gap-1">
+                                <i class="bi bi-patch-check-fill"></i> Verified Challenge
+                            </span>
+                        </div>
+
+                        <h1 class="h2 fw-bold text-navy mb-3" th:text="${problem.title}">
+                            Smart Waste Collection Route Optimization
+                        </h1>
+
+                        <div class="d-flex flex-wrap align-items-center gap-4 text-muted-custom small mb-4 pb-3 border-bottom">
+                            <div>
+                                <i class="bi bi-building me-1"></i>
+                                <span class="fw-semibold text-navy" th:text="${problem.organizationName}">Clean Earth Foundation</span>
+                                <span class="badge bg-light text-secondary border ms-1" th:text="${problem.sourceType}">NGO</span>
+                            </div>
+                            <div>
+                                <i class="bi bi-clock me-1"></i> Duration: <span class="fw-semibold text-navy" th:text="${problem.duration}">2–3 Months</span>
+                            </div>
+                            <div>
+                                <i class="bi bi-eye me-1"></i> <span th:text="${problem.viewsCount}">120</span> views
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons Row -->
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            <a th:href="@{'/projects/start/' + ${problem.id}}" class="btn btn-primary-custom px-4 py-2 d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-play-circle-fill"></i> Start Project
+                            </a>
+                            <form th:action="@{'/problems/' + ${problem.id} + '/bookmark'}" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-outline-custom px-3 py-2 d-inline-flex align-items-center gap-2">
+                                    <i th:class="${problem.bookmarkedByCurrentUser ? 'bi bi-bookmark-fill text-primary' : 'bi bi-bookmark'}"></i>
+                                    <span th:text="${problem.bookmarkedByCurrentUser ? 'Bookmarked' : 'Bookmark'}">Bookmark</span>
+                                </button>
+                            </form>
+                            <button type="button" class="btn btn-outline-custom px-3 py-2 btn-share-link d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-share"></i> Share
+                            </button>
+                        </div>
+
+                        <!-- Problem Description -->
+                        <div class="mb-4">
+                            <h4 class="fw-bold text-navy mb-2">Problem Overview</h4>
+                            <p class="text-muted-custom leading-relaxed" style="white-space: pre-line;" th:text="${problem.description}">
+                                Full problem description...
+                            </p>
+                        </div>
+
+                        <!-- Real-World Context -->
+                        <div class="mb-4" th:if="${problem.realWorldContext}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-globe2 text-primary me-2"></i> Real-World Context</h4>
+                            <p class="text-muted-custom leading-relaxed" style="white-space: pre-line;" th:text="${problem.realWorldContext}">
+                                Real-world context details...
+                            </p>
+                        </div>
+
+                        <!-- Current Challenges -->
+                        <div class="mb-4" th:if="${problem.currentChallenges}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-exclamation-triangle text-warning me-2"></i> Current Challenges</h4>
+                            <p class="text-muted-custom leading-relaxed" style="white-space: pre-line;" th:text="${problem.currentChallenges}">
+                                Current operational bottlenecks...
+                            </p>
+                        </div>
+
+                        <!-- Expected Outcome -->
+                        <div class="mb-4" th:if="${problem.expectedOutcome}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-bullseye text-success me-2"></i> Expected Outcome</h4>
+                            <p class="text-muted-custom leading-relaxed" style="white-space: pre-line;" th:text="${problem.expectedOutcome}">
+                                Expected working outcome...
+                            </p>
+                        </div>
+
+                        <!-- Why this problem matters -->
+                        <div class="mb-4 p-4 rounded bg-light border" th:if="${problem.whyItMatters}">
+                            <h5 class="fw-bold text-navy mb-2"><i class="bi bi-heart-pulse-fill text-danger me-2"></i> Why This Problem Matters</h5>
+                            <p class="text-muted-custom small mb-0" style="white-space: pre-line;" th:text="${problem.whyItMatters}">
+                                Measurable societal or business impact...
+                            </p>
+                        </div>
+
+                        <!-- Expected Deliverables -->
+                        <div class="mb-4" th:if="${problem.deliverables}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-check2-square text-primary me-2"></i> Expected Deliverables</h4>
+                            <div class="p-3 bg-white border rounded">
+                                <pre class="text-muted-custom mb-0" style="font-family: inherit; white-space: pre-line;" th:text="${problem.deliverables}"></pre>
+                            </div>
+                        </div>
+
+                        <!-- Possible Extensions -->
+                        <div class="mb-2" th:if="${problem.possibleExtensions}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-arrows-angle-expand text-info me-2"></i> Possible Extensions (Future Scope)</h4>
+                            <p class="text-muted-custom small" style="white-space: pre-line;" th:text="${problem.possibleExtensions}">
+                                Ways future students can expand this project...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Previous Solutions Section (Multiple solutions from student batches) -->
+                    <div class="card-custom p-4 p-md-5 bg-white mb-4" id="solutionsSection">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div>
+                                <h3 class="fw-bold text-navy mb-1"><i class="bi bi-collection-fill text-primary me-2"></i> Previous Solutions</h3>
+                                <p class="text-muted-custom small mb-0">Learn how previous student batches solved this challenge.</p>
+                            </div>
+                            <span class="badge bg-light text-primary border fw-bold px-3 py-2" th:text="${#lists.size(previousSolutions) + ' Solutions'}">
+                                1 Solutions
+                            </span>
+                        </div>
+
+                        <div th:if="${not #lists.isEmpty(previousSolutions)}">
+                            <div class="card border rounded-3 p-4 mb-3" th:each="sol : ${previousSolutions}">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="fw-bold text-navy mb-1">
+                                        <a th:href="@{'/solutions/' + ${sol.id}}" class="text-decoration-none text-navy" th:text="${sol.title}">
+                                            CareConnect: Rural Clinic Triage System
+                                        </a>
+                                    </h5>
+                                    <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                        <i class="bi bi-star-fill text-warning me-1"></i> <span th:text="${sol.averageRating}">4.8</span>
+                                    </span>
+                                </div>
+
+                                <div class="text-muted small mb-2">
+                                    <i class="bi bi-people me-1"></i> Team: <span class="fw-semibold" th:text="${sol.teamNames}">Student Names</span> &bull;
+                                    <i class="bi bi-mortarboard me-1"></i> <span th:text="${sol.college}">College Name</span> &bull;
+                                    <i class="bi bi-calendar3 me-1"></i> <span th:text="${sol.completionYear}">2025</span>
+                                </div>
+
+                                <div class="mb-3">
+                                    <span class="badge-tech" th:each="tech : ${sol.techList}" th:text="${tech}">Java</span>
+                                </div>
+
+                                <p class="text-muted-custom small mb-3" th:text="${#strings.abbreviate(sol.solutionOverview, 180)}">
+                                    Overview of how the project was built and deployed...
+                                </p>
+
+                                <div class="d-flex flex-wrap gap-2 pt-2 border-top">
+                                    <a th:href="@{'/solutions/' + ${sol.id}}" class="btn btn-outline-custom btn-sm">
+                                        <i class="bi bi-file-text me-1"></i> View Solution &amp; Architecture
+                                    </a>
+                                    <a th:if="${sol.githubUrl}" th:href="${sol.githubUrl}" target="_blank" class="btn btn-light btn-sm border">
+                                        <i class="bi bi-github me-1"></i> Repository
+                                    </a>
+                                    <a th:if="${sol.documentationUrl}" th:href="${sol.documentationUrl}" target="_blank" class="btn btn-light btn-sm border">
+                                        <i class="bi bi-file-earmark-pdf me-1"></i> Documentation
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="empty-state py-4" th:if="${#lists.isEmpty(previousSolutions)}">
+                            <i class="bi bi-journal-code text-muted fs-2 mb-2 d-block"></i>
+                            <div class="fw-bold text-navy">No archived solutions yet for this problem!</div>
+                            <div class="text-muted-custom small mb-3">Be the first student team to build and submit a solution to this authentic challenge.</div>
+                            <a th:href="@{'/projects/start/' + ${problem.id}}" class="btn btn-primary-custom btn-sm">
+                                <i class="bi bi-play-circle-fill me-1"></i> Start This Project
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar Column -->
+                <div class="col-lg-4">
+                    <!-- Technical Specifications Card -->
+                    <div class="card-custom p-4 mb-4 bg-white">
+                        <h5 class="fw-bold text-navy mb-3 pb-2 border-bottom">Project Specifications</h5>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-semibold">Required Skills</div>
+                            <div class="text-navy small fw-semibold" th:text="${problem.requiredSkills}">Java, MySQL</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-semibold">Suggested Technologies</div>
+                            <div class="mt-1">
+                                <span class="badge-tech" th:each="tech : ${problem.techList}" th:text="${tech}">Java</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-semibold">Domain Category</div>
+                            <div class="text-navy small fw-semibold" th:text="${problem.domain}">Healthcare</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-semibold">Difficulty Level</div>
+                            <div class="text-navy small fw-semibold" th:text="${problem.difficulty}">Intermediate</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-semibold">Estimated Timeline</div>
+                            <div class="text-navy small fw-semibold" th:text="${problem.duration}">2–3 Months</div>
+                        </div>
+
+                        <div class="mb-0">
+                            <div class="text-muted small fw-semibold">Academic Project Type</div>
+                            <div class="text-navy small fw-semibold" th:text="${problem.projectType}">Major Project</div>
+                        </div>
+                    </div>
+
+                    <!-- Organization Info Card -->
+                    <div class="card-custom p-4 mb-4 bg-white">
+                        <h5 class="fw-bold text-navy mb-3 pb-2 border-bottom">Source Organization</h5>
+
+                        <div class="d-flex align-items-center gap-2 mb-2">
+                            <div class="step-icon mb-0" style="width: 36px; height: 36px; font-size: 1rem;">
+                                <i class="bi bi-building"></i>
+                            </div>
+                            <div>
+                                <div class="fw-bold text-navy" th:text="${problem.organizationName}">Clean Earth Foundation</div>
+                                <div class="badge bg-light text-secondary border small" th:text="${problem.sourceType}">NGO</div>
+                            </div>
+                        </div>
+
+                        <div class="text-muted-custom small mb-3">
+                            Contact Information:
+                            <div class="fw-semibold text-navy" th:text="${problem.contactInfo}">contact@organization.org</div>
+                        </div>
+
+                        <div class="p-3 bg-light rounded small text-muted-custom">
+                            <i class="bi bi-shield-check text-success me-1"></i>
+                            This organization has verified this challenge as an authentic community / industrial problem statement.
+                        </div>
+                    </div>
+
+                    <!-- Viva Demonstration Note -->
+                    <div class="card-custom p-4 bg-primary-subtle border-primary-subtle">
+                        <div class="d-flex align-items-center gap-2 text-primary fw-bold mb-2">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <span>Mini-Project Viva Tip</span>
+                        </div>
+                        <p class="small text-navy mb-0">
+                            When presenting this problem to your faculty panel, emphasize the <strong>real-world context</strong> and explain how your solution improves upon existing limitations or fills an authentic operational gap.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

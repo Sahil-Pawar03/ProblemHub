@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Solutions Library - Learn From Previous Projects')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Header Section -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                <div>
+                    <h1 class="h2 fw-bold text-navy mb-1">Learn From Previous Projects</h1>
+                    <p class="text-muted-custom mb-0">Browse completed, verified student solutions. Study architectures, review code, and build the next phase.</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <a th:href="@{/solutions/new}" class="btn btn-primary-custom btn-sm">
+                        <i class="bi bi-cloud-arrow-up me-1"></i> Submit a Solution
+                    </a>
+                </div>
+            </div>
+
+            <!-- "Build on Existing Work" Banner -->
+            <div class="card-custom p-4 bg-primary-subtle border-primary-subtle mb-4">
+                <div class="row align-items-center">
+                    <div class="col-md-9">
+                        <h5 class="fw-bold text-navy mb-1"><i class="bi bi-lightbulb-fill text-primary me-2"></i> Build on This Project (Don't Start from Zero!)</h5>
+                        <p class="small text-muted-custom mb-0">
+                            ProblemHub encourages students to take up documented limitations and future scope from seniors to build version 2.0 or 3.0 of solutions for lasting community impact.
+                        </p>
+                    </div>
+                    <div class="col-md-3 text-md-end mt-3 mt-md-0">
+                        <a th:href="@{/about}" class="btn btn-primary-custom btn-sm">Read Our Vision</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Search and Filter Section -->
+            <div class="card-custom p-4 mb-4 bg-white">
+                <form th:action="@{/solutions}" method="get" id="solFilterForm">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text bg-white border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0" name="q" th:value="${selectedQuery}"
+                               placeholder="Search solutions, technologies, problems solved, or college names...">
+                        <button class="btn btn-primary-custom px-4" type="submit">Search</button>
+                    </div>
+
+                    <div class="row g-2">
+                        <div class="col-lg-2 col-md-4 col-6">
+                            <label class="form-label small fw-semibold text-muted mb-1">Domain</label>
+                            <select class="form-select form-select-sm" name="domain" onchange="document.getElementById('solFilterForm').submit()">
+                                <option value="">All Domains</option>
+                                <option value="Environment" th:selected="${selectedDomain == 'Environment'}">Environment</option>
+                                <option value="Healthcare" th:selected="${selectedDomain == 'Healthcare'}">Healthcare</option>
+                                <option value="Education" th:selected="${selectedDomain == 'Education'}">Education</option>
+                                <option value="Smart City" th:selected="${selectedDomain == 'Smart City'}">Smart City</option>
+                                <option value="Finance" th:selected="${selectedDomain == 'Finance'}">Finance</option>
+                                <option value="Agriculture" th:selected="${selectedDomain == 'Agriculture'}">Agriculture</option>
+                                <option value="Cybersecurity" th:selected="${selectedDomain == 'Cybersecurity'}">Cybersecurity</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4 col-6">
+                            <label class="form-label small fw-semibold text-muted mb-1">Technology</label>
+                            <select class="form-select form-select-sm" name="tech" onchange="document.getElementById('solFilterForm').submit()">
+                                <option value="">All Tech</option>
+                                <option value="Java" th:selected="${selectedTech == 'Java'}">Java</option>
+                                <option value="MySQL" th:selected="${selectedTech == 'MySQL'}">MySQL / SQL</option>
+                                <option value="Spring Boot" th:selected="${selectedTech == 'Spring Boot'}">Spring Boot</option>
+                                <option value="Bootstrap 5" th:selected="${selectedTech == 'Bootstrap 5'}">Bootstrap 5</option>
+                                <option value="Leaflet" th:selected="${selectedTech == 'Leaflet'}">Leaflet</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4 col-6">
+                            <label class="form-label small fw-semibold text-muted mb-1">Completion Year</label>
+                            <select class="form-select form-select-sm" name="year" onchange="document.getElementById('solFilterForm').submit()">
+                                <option value="">All Years</option>
+                                <option value="2026" th:selected="${selectedYear == 2026}">2026</option>
+                                <option value="2025" th:selected="${selectedYear == 2025}">2025</option>
+                                <option value="2024" th:selected="${selectedYear == 2024}">2024</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4 col-6">
+                            <label class="form-label small fw-semibold text-muted mb-1">Difficulty</label>
+                            <select class="form-select form-select-sm" name="difficulty" onchange="document.getElementById('solFilterForm').submit()">
+                                <option value="">All Difficulties</option>
+                                <option value="Beginner" th:selected="${selectedDifficulty == 'Beginner'}">Beginner</option>
+                                <option value="Intermediate" th:selected="${selectedDifficulty == 'Intermediate'}">Intermediate</option>
+                                <option value="Advanced" th:selected="${selectedDifficulty == 'Advanced'}">Advanced</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4 col-6">
+                            <label class="form-label small fw-semibold text-muted mb-1">Project Type</label>
+                            <select class="form-select form-select-sm" name="type" onchange="document.getElementById('solFilterForm').submit()">
+                                <option value="">All Project Types</option>
+                                <option value="Mini Project" th:selected="${selectedType == 'Mini Project'}">Mini Project</option>
+                                <option value="Major Project" th:selected="${selectedType == 'Major Project'}">Major Project</option>
+                            </select>
+                        </div>
+
+                        <div class="col-lg-2 col-md-4 col-6 d-flex align-items-end">
+                            <a th:href="@{/solutions}" class="btn btn-outline-secondary btn-sm w-100">
+                                <i class="bi bi-x-circle me-1"></i> Clear
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Total Results Info -->
+            <div class="mb-3 text-muted-custom small">
+                Archived Solutions: <strong class="text-navy" th:text="${totalFound}">0</strong> verified projects
+            </div>
+
+            <!-- Solution Cards Grid -->
+            <div class="row g-4" th:if="${not #lists.isEmpty(solutions)}">
+                <div class="col-lg-6" th:each="sol : ${solutions}">
+                    <div class="card-custom h-100 p-4 bg-white d-flex flex-column">
+                        <!-- Top Row: Verified Badge & Year -->
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge-domain" th:text="${sol.problemDomain}">Healthcare</span>
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-light text-dark border small">
+                                    <i class="bi bi-calendar3 me-1"></i> <span th:text="${sol.completionYear}">2025</span>
+                                </span>
+                                <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                    <i class="bi bi-star-fill text-warning me-1"></i> <span th:text="${sol.averageRating}">4.8</span>
+                                </span>
+                            </div>
+                        </div>
+
+                        <!-- Solution Title -->
+                        <h4 class="fw-bold text-navy mb-1">
+                            <a th:href="@{'/solutions/' + ${sol.id}}" class="text-decoration-none text-navy" th:text="${sol.title}">
+                                CareConnect: Rural Clinic Triage System
+                            </a>
+                        </h4>
+
+                        <!-- Problem Solved -->
+                        <div class="text-muted small mb-3">
+                            <i class="bi bi-bullseye text-primary me-1"></i> Problem Solved:
+                            <a th:href="@{'/problems/' + ${sol.problemId}}" class="text-decoration-none fw-semibold" th:text="${sol.problemTitle}">
+                                Rural Primary Healthcare Tele-Triage
+                            </a>
+                        </div>
+
+                        <!-- Team & College -->
+                        <div class="small text-muted-custom mb-3">
+                            <div><i class="bi bi-people me-1"></i> <strong>Team:</strong> <span th:text="${sol.teamNames}">Rahul Sharma, Sneha Patil</span></div>
+                            <div><i class="bi bi-mortarboard me-1"></i> <span th:text="${sol.college}">DKTE Society's TEI</span></div>
+                        </div>
+
+                        <!-- Tech Stack Badges -->
+                        <div class="mb-3">
+                            <span class="badge-tech" th:each="tech : ${sol.techList}" th:text="${tech}">Java</span>
+                        </div>
+
+                        <!-- Overview Summary -->
+                        <p class="text-muted-custom small mb-3 flex-grow-1" th:text="${#strings.abbreviate(sol.solutionOverview, 160)}">
+                            Lightweight patient queue management and clinical triage web portal crafted for rural healthcare sub-centres...
+                        </p>
+
+                        <!-- Key Results Metric -->
+                        <div class="p-2 px-3 bg-light rounded small text-navy fw-semibold mb-3 border-start border-3 border-success" th:if="${sol.results}">
+                            <i class="bi bi-graph-up text-success me-1"></i> Result: <span class="fw-normal text-muted" th:text="${#strings.abbreviate(sol.results, 100)}">Reduced wait times from 3.5h to 35m</span>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-wrap gap-2 pt-3 border-top mt-auto">
+                            <a th:href="@{'/solutions/' + ${sol.id}}" class="btn btn-outline-custom btn-sm">
+                                <i class="bi bi-file-text me-1"></i> View Solution
+                            </a>
+                            <a th:if="${sol.githubUrl}" th:href="${sol.githubUrl}" target="_blank" class="btn btn-light btn-sm border">
+                                <i class="bi bi-github me-1"></i> GitHub
+                            </a>
+                            <a th:if="${sol.documentationUrl}" th:href="${sol.documentationUrl}" target="_blank" class="btn btn-light btn-sm border">
+                                <i class="bi bi-file-earmark-pdf me-1"></i> Documentation
+                            </a>
+                            <a th:href="@{'/projects/start/' + ${sol.problemId}}" class="btn btn-primary-custom btn-sm ms-auto" title="Build version 2.0 based on this solution">
+                                <i class="bi bi-arrow-repeat me-1"></i> Build On This
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state mt-4" th:if="${#lists.isEmpty(solutions)}">
+                <div class="empty-state-icon">
+                    <i class="bi bi-collection"></i>
+                </div>
+                <h4 class="fw-bold text-navy mb-2">No Matching Archived Solutions Found</h4>
+                <p class="text-muted-custom small mx-auto mb-4" style="max-width: 450px;">
+                    We couldn't find any completed student solutions matching your filters. Try clearing your filters or exploring all problem statements.
+                </p>
+                <a th:href="@{/solutions}" class="btn btn-primary-custom btn-sm">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i> Reset Filters
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

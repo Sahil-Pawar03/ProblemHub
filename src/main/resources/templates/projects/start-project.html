@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Start Project - ProblemHub')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container" style="max-width: 760px;">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/problems}" class="text-decoration-none">Problems</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{'/problems/' + ${problem.id}}" class="text-decoration-none" th:text="${problem.title}">Problem</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Start Project</li>
+                </ol>
+            </nav>
+
+            <div class="text-center mb-4">
+                <span class="badge bg-light text-primary border px-3 py-2 fw-bold text-uppercase mb-2">Project Proposal</span>
+                <h1 class="h2 fw-bold text-navy">Initiate Student Project</h1>
+                <p class="text-muted-custom small">Register your student project linked to this authentic problem statement.</p>
+            </div>
+
+            <!-- Problem Context Summary Box -->
+            <div class="card-custom p-3 bg-light border mb-4">
+                <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge-domain" th:text="${problem.domain}">Environment</span>
+                    <span class="badge bg-light text-dark border small" th:text="${problem.difficulty}">Intermediate</span>
+                </div>
+                <h5 class="fw-bold text-navy mb-1" th:text="${problem.title}">Problem Title</h5>
+                <div class="text-muted small">
+                    Organization: <span class="fw-semibold text-navy" th:text="${problem.organizationName}">Clean Earth Foundation</span>
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card-custom p-4 p-md-5 bg-white shadow-sm mb-5">
+                <form th:action="@{/projects/save}" th:object="${project}" method="post">
+                    <input type="hidden" th:field="*{problemId}">
+                    <input type="hidden" th:field="*{studentUserId}">
+
+                    <!-- Project Title -->
+                    <div class="mb-4">
+                        <label for="title" class="form-label fw-semibold text-navy">Your Team's Project Name <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg fs-6" id="title" th:field="*{title}"
+                               placeholder="e.g. GreenRoute: Municipal Waste Route Optimizer" required>
+                    </div>
+
+                    <!-- Team Members -->
+                    <div class="mb-4">
+                        <label for="teamMembers" class="form-label fw-semibold text-navy">Team Members <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="teamMembers" th:field="*{teamMembers}"
+                               placeholder="e.g. Rahul Sharma (Lead), Rohan Kulkarni, Aniket Shinde" required>
+                        <div class="form-text small">Enter your team member names who will be collaborating on this solution.</div>
+                    </div>
+
+                    <!-- Technologies Stack -->
+                    <div class="mb-4">
+                        <label for="technologiesUsed" class="form-label fw-semibold text-navy">Technologies You Plan to Use <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="technologiesUsed" th:field="*{technologiesUsed}"
+                               placeholder="e.g. Java, MySQL, Leaflet, Spring Boot, HTML5" required>
+                    </div>
+
+                    <!-- Description / Approach -->
+                    <div class="mb-4">
+                        <label for="description" class="form-label fw-semibold text-navy">Project Overview &amp; Planned Approach</label>
+                        <textarea class="form-control" id="description" th:field="*{description}" rows="4"
+                                  placeholder="Describe how your student team plans to tackle the challenges outlined in this problem statement..."></textarea>
+                    </div>
+
+                    <!-- Optional Repository & Doc Link -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="repoUrl" class="form-label fw-semibold text-navy">GitHub Repository URL (Optional)</label>
+                            <input type="url" class="form-control" id="repoUrl" th:field="*{repoUrl}"
+                                   placeholder="https://github.com/username/project">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="documentationUrl" class="form-label fw-semibold text-navy">Documentation Link (Optional)</label>
+                            <input type="url" class="form-control" id="documentationUrl" th:field="*{documentationUrl}"
+                                   placeholder="https://docs.google.com/document/...">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <a th:href="@{'/problems/' + ${problem.id}}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary-custom px-4 py-2 fs-6">
+                            <i class="bi bi-rocket-takeoff-fill me-1"></i> Launch Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('About ProblemHub')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container" style="max-width: 900px;">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">About ProblemHub</li>
+                </ol>
+            </nav>
+
+            <!-- Page Header -->
+            <div class="text-center mb-5">
+                <span class="badge bg-light text-primary border px-3 py-2 fw-bold text-uppercase mb-2">Platform Mission</span>
+                <h1 class="text-navy fw-bold">Why ProblemHub Exists</h1>
+                <p class="text-muted-custom fs-5 mx-auto" style="max-width: 650px;">
+                    "Real Problems. Meaningful Projects. Lasting Impact."
+                </p>
+            </div>
+
+            <!-- The Problem -->
+            <div class="card-custom p-4 p-md-5 mb-4 border-start border-4 border-danger">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="feature-icon-wrapper mb-0 bg-danger-subtle text-danger">
+                        <i class="bi bi-exclamation-octagon-fill"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 text-navy">The Academic Project Dilemma</h3>
+                </div>
+                <p class="text-muted-custom leading-relaxed mb-3">
+                    Every semester, thousands of talented engineering and computer science students spend months creating project reports, presentations, and code repositories. Unfortunately, an overwhelming majority end up building repetitive, trivial systems &mdash; online book stores, simple quiz applications, or basic hotel booking CRUD portals.
+                </p>
+                <p class="text-muted-custom leading-relaxed mb-0">
+                    Meanwhile, local municipal corporations, grassroots non-profit charities (NGOs), government primary healthcare sub-centres, and regional agrarian cooperatives face genuine operational bottlenecks that simple, well-crafted software could completely solve. The gap is not a lack of student talent; it is the <strong>absence of a centralized bridge to discover authentic problems</strong>.
+                </p>
+            </div>
+
+            <!-- The Solution -->
+            <div class="card-custom p-4 p-md-5 mb-4 border-start border-4 border-primary">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="feature-icon-wrapper mb-0 bg-primary-subtle text-primary">
+                        <i class="bi bi-lightbulb-fill"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 text-navy">The ProblemHub Solution</h3>
+                </div>
+                <p class="text-muted-custom leading-relaxed mb-3">
+                    <strong>ProblemHub</strong> is a centralized ecosystem where authentic challenges from industries, startups, NGOs, municipal councils, and innovation cells are crowdsourced, verified by faculty, and discovered by student teams based on their exact tech stack, difficulty, and semester requirements.
+                </p>
+                <p class="text-muted-custom leading-relaxed mb-0">
+                    Crucially, ProblemHub also <strong>preserves completed student solutions</strong>. When a student batch finishes a project, their architecture, GitHub repository, and documented limitations become part of the platform's searchable knowledge base. The next batch of students can study their results and build direct extensions instead of reinventing the wheel from scratch.
+                </p>
+            </div>
+
+            <!-- The Vision -->
+            <div class="card-custom p-4 p-md-5 mb-5 border-start border-4 border-success">
+                <div class="d-flex align-items-center gap-3 mb-3">
+                    <div class="feature-icon-wrapper mb-0 bg-success-subtle text-success">
+                        <i class="bi bi-compass-fill"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 text-navy">Our Long-Term Vision</h3>
+                </div>
+                <blockquote class="blockquote my-3 ps-3 border-start border-3 border-success text-navy fw-semibold fst-italic">
+                    "Create a continuous ecosystem where every student project can become a foundation for the next generation."
+                </blockquote>
+                <p class="text-muted-custom leading-relaxed mb-0">
+                    By linking college coursework to real community impact, ProblemHub turns project evaluations from mere grading rituals into true engineering breakthroughs that help students gain industry-ready portfolios while delivering tangible benefits to society.
+                </p>
+            </div>
+
+            <!-- College Project Architecture (Viva Explanation Card) -->
+            <div class="card-custom p-4 p-md-5 bg-white">
+                <h4 class="fw-bold text-navy mb-3"><i class="bi bi-diagram-3 me-2 text-primary"></i> System Architecture (Viva Reference)</h4>
+                <p class="text-muted-custom small mb-4">
+                    ProblemHub is built with an understandable, professional, multi-tier layered architecture using pure Java and relational database technologies without over-engineered ORM abstraction:
+                </p>
+                <div class="row g-3 text-center">
+                    <div class="col-md-2 col-4">
+                        <div class="p-3 bg-light rounded border">
+                            <div class="fw-bold text-primary small">Controller</div>
+                            <div class="text-muted small" style="font-size: 0.72rem;">HTTP &amp; Routing</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-4">
+                        <div class="p-3 bg-light rounded border">
+                            <div class="fw-bold text-primary small">Service</div>
+                            <div class="text-muted small" style="font-size: 0.72rem;">Business Logic</div>
+                        </div>
+                    </div>
+                    <div class="col-md-2 col-4">
+                        <div class="p-3 bg-light rounded border">
+                            <div class="fw-bold text-primary small">DAO</div>
+                            <div class="text-muted small" style="font-size: 0.72rem;">Data Access</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 bg-light rounded border">
+                            <div class="fw-bold text-primary small">JDBC PreparedStatement</div>
+                            <div class="text-muted small" style="font-size: 0.72rem;">SQL Injection Safe</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3 col-6">
+                        <div class="p-3 bg-light rounded border">
+                            <div class="fw-bold text-primary small">MySQL Database</div>
+                            <div class="text-muted small" style="font-size: 0.72rem;">13 Normalized Tables</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a th:href="@{/problems}" class="btn btn-primary-custom px-4 py-2 me-2">
+                    <i class="bi bi-compass me-1"></i> Explore Problem Statements
+                </a>
+                <a th:href="@{/register}" class="btn btn-outline-custom px-4 py-2">
+                    <i class="bi bi-person-plus me-1"></i> Join ProblemHub
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

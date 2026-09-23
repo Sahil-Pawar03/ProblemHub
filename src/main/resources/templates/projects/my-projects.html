@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('My Projects - ProblemHub')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                <div>
+                    <h1 class="h2 fw-bold text-navy mb-1">My Projects</h1>
+                    <p class="text-muted-custom mb-0">Track and manage your team projects, update progress, and submit final solutions.</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <a th:href="@{/problems}" class="btn btn-primary-custom btn-sm">
+                        <i class="bi bi-compass me-1"></i> Discover New Problems
+                    </a>
+                </div>
+            </div>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Status Tabs -->
+            <div class="card-custom bg-white p-2 mb-4">
+                <ul class="nav nav-pills">
+                    <li class="nav-item">
+                        <a class="nav-link py-2 px-3 fw-semibold"
+                           th:classappend="${currentTab == 'ALL' ? 'active bg-primary' : 'text-navy'}"
+                           th:href="@{/projects/my(tab='ALL')}">
+                            All Projects <span class="badge bg-light text-dark ms-1" th:text="${allCount}">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-2 px-3 fw-semibold"
+                           th:classappend="${currentTab == 'IN_PROGRESS' ? 'active bg-primary' : 'text-navy'}"
+                           th:href="@{/projects/my(tab='IN_PROGRESS')}">
+                            In Progress <span class="badge bg-light text-dark ms-1" th:text="${inProgressCount}">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-2 px-3 fw-semibold"
+                           th:classappend="${currentTab == 'PROPOSED' ? 'active bg-primary' : 'text-navy'}"
+                           th:href="@{/projects/my(tab='PROPOSED')}">
+                            Proposed <span class="badge bg-light text-dark ms-1" th:text="${proposedCount}">0</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link py-2 px-3 fw-semibold"
+                           th:classappend="${currentTab == 'COMPLETED' ? 'active bg-primary' : 'text-navy'}"
+                           th:href="@{/projects/my(tab='COMPLETED')}">
+                            Completed <span class="badge bg-light text-dark ms-1" th:text="${completedCount}">0</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- Project Cards -->
+            <div class="row g-4" th:if="${not #lists.isEmpty(projects)}">
+                <div class="col-lg-6" th:each="project : ${projects}">
+                    <div class="card-custom h-100 p-4 bg-white d-flex flex-column">
+                        <!-- Top Row: Status Badge & Date -->
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span th:class="${project.status == 'COMPLETED' ? 'badge bg-success-subtle text-success border border-success-subtle' : (project.status == 'IN_PROGRESS' ? 'badge bg-primary-subtle text-primary border border-primary-subtle' : 'badge bg-warning-subtle text-dark border border-warning-subtle')}"
+                                  th:text="${project.status}">IN_PROGRESS</span>
+                            <div class="text-muted small">
+                                <i class="bi bi-calendar-event me-1"></i> Started: <span th:text="${project.startDate}">2026-01-15</span>
+                            </div>
+                        </div>
+
+                        <!-- Project Title -->
+                        <h4 class="fw-bold text-navy mb-1">
+                            <a th:href="@{'/projects/' + ${project.id}}" class="text-decoration-none text-navy" th:text="${project.title}">
+                                GreenRoute: Municipal Waste Truck Optimizer
+                            </a>
+                        </h4>
+
+                        <!-- Problem Association -->
+                        <div class="text-muted small mb-3">
+                            <i class="bi bi-file-earmark-text text-primary me-1"></i> Problem:
+                            <a th:href="@{'/problems/' + ${project.problemId}}" class="text-decoration-none fw-semibold" th:text="${project.problemTitle}">
+                                Smart Waste Collection Route Optimization
+                            </a>
+                        </div>
+
+                        <!-- Team & Tech -->
+                        <div class="small mb-3">
+                            <div class="mb-1">
+                                <i class="bi bi-people me-1 text-muted"></i> <strong>Team:</strong> <span th:text="${project.teamMembers}">Rahul Sharma, Rohan Kulkarni</span>
+                            </div>
+                            <div>
+                                <i class="bi bi-code-slash me-1 text-muted"></i> <strong>Stack:</strong> <span th:text="${project.technologiesUsed}">Java, MySQL, Leaflet</span>
+                            </div>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mb-4 mt-auto">
+                            <div class="d-flex justify-content-between small fw-bold text-navy mb-1">
+                                <span>Progress</span>
+                                <span th:text="${project.progressPercent + '%'}">65%</span>
+                            </div>
+                            <div class="progress progress-custom">
+                                <div class="progress-bar progress-bar-custom" role="progressbar"
+                                     th:style="'width: ' + ${project.progressPercent} + '%;'"
+                                     th:aria-valuenow="${project.progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex flex-wrap gap-2 pt-3 border-top">
+                            <a th:href="@{'/projects/' + ${project.id}}" class="btn btn-outline-custom btn-sm">
+                                <i class="bi bi-eye me-1"></i> View
+                            </a>
+                            <!-- Button to trigger update modal -->
+                            <button type="button" class="btn btn-outline-custom btn-sm"
+                                    data-bs-toggle="modal" th:data-bs-target="'#updateModal-' + ${project.id}">
+                                <i class="bi bi-pencil-square me-1"></i> Update
+                            </button>
+                            <!-- Submit Solution button -->
+                            <a th:href="@{'/solutions/new?projectId=' + ${project.id}}" class="btn btn-primary-custom btn-sm ms-auto">
+                                <i class="bi bi-check-circle me-1"></i> Submit Solution
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Update Modal for this Project -->
+                    <div class="modal fade" th:id="'updateModal-' + ${project.id}" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form th:action="@{'/projects/' + ${project.id} + '/update-progress'}" method="post">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title fw-bold text-navy" id="modalLabel">Update Project Progress</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label fw-semibold small text-navy">Project Title</label>
+                                            <input type="text" class="form-control" th:value="${project.title}" readonly>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="progressPercent" class="form-label fw-semibold small text-navy">Progress Percentage (0 - 100%)</label>
+                                            <input type="number" class="form-control" id="progressPercent" name="progressPercent"
+                                                   min="0" max="100" th:value="${project.progressPercent}" required>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="status" class="form-label fw-semibold small text-navy">Project Status</label>
+                                            <select class="form-select" id="status" name="status" required>
+                                                <option value="PROPOSED" th:selected="${project.status == 'PROPOSED'}">Proposed</option>
+                                                <option value="IN_PROGRESS" th:selected="${project.status == 'IN_PROGRESS'}">In Progress</option>
+                                                <option value="COMPLETED" th:selected="${project.status == 'COMPLETED'}">Completed</option>
+                                                <option value="ABANDONED" th:selected="${project.status == 'ABANDONED'}">Abandoned</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="repoUrl" class="form-label fw-semibold small text-navy">GitHub Repository URL</label>
+                                            <input type="url" class="form-control" id="repoUrl" name="repoUrl"
+                                                   th:value="${project.repoUrl}" placeholder="https://github.com/username/project">
+                                        </div>
+
+                                        <div class="mb-3">
+                                            <label for="documentationUrl" class="form-label fw-semibold small text-navy">Documentation Link</label>
+                                            <input type="url" class="form-control" id="documentationUrl" name="documentationUrl"
+                                                   th:value="${project.documentationUrl}" placeholder="https://docs.google.com/document/...">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+                                        <button type="submit" class="btn btn-primary-custom btn-sm">Save Changes</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty State -->
+            <div class="empty-state mt-4" th:if="${#lists.isEmpty(projects)}">
+                <div class="empty-state-icon">
+                    <i class="bi bi-kanban"></i>
+                </div>
+                <h4 class="fw-bold text-navy mb-2">No Projects in this Section</h4>
+                <p class="text-muted-custom small mx-auto mb-4" style="max-width: 450px;">
+                    You haven't initiated any student team projects under this status yet. Browse verified problem statements and get started today!
+                </p>
+                <a th:href="@{/problems}" class="btn btn-primary-custom btn-sm">
+                    <i class="bi bi-compass me-1"></i> Explore Problems
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

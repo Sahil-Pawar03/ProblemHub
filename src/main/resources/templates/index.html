@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Real Problems → Meaningful Projects')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-section text-center">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-10">
+                        <div class="hero-pill">
+                            <i class="bi bi-stars"></i>
+                            <span>Bridging Academic Projects with Real-World Challenges</span>
+                        </div>
+                        <h1 class="hero-title">
+                            Turn Real-World Problems<br>
+                            <span class="text-primary">Into Meaningful Projects.</span>
+                        </h1>
+                        <p class="hero-subtitle">
+                            Discover authentic challenges from industries, startups, NGOs, government organizations and hackathons &mdash; then build solutions that create lasting impact.
+                        </p>
+
+                        <div class="d-flex flex-wrap justify-content-center gap-3 mb-5">
+                            <a th:href="@{/problems}" class="btn btn-primary-custom px-4 py-2 fs-6">
+                                <i class="bi bi-compass me-1"></i> Explore Problems
+                            </a>
+                            <a th:href="@{/problems/new}" class="btn btn-outline-custom px-4 py-2 fs-6">
+                                <i class="bi bi-plus-circle me-1"></i> Post a Problem
+                            </a>
+                            <a th:href="@{/solutions}" class="btn btn-outline-custom px-4 py-2 fs-6">
+                                <i class="bi bi-collection me-1"></i> View Past Solutions
+                            </a>
+                        </div>
+
+                        <!-- Lifecycle Flow Illustration -->
+                        <div class="card-custom p-4 bg-white shadow-sm mx-auto" style="max-width: 960px;">
+                            <div class="text-muted-custom small text-uppercase fw-bold letter-spacing-1 mb-3">
+                                The ProblemHub Project Lifecycle
+                            </div>
+                            <div class="row g-2 align-items-center justify-content-center">
+                                <div class="col-md col-6">
+                                    <div class="flow-step">
+                                        <div class="step-icon"><i class="bi bi-file-earmark-text"></i></div>
+                                        <div class="fw-bold small text-navy">1. Problem</div>
+                                        <div class="text-muted small" style="font-size: 0.72rem;">Industry / NGO</div>
+                                    </div>
+                                </div>
+                                <div class="col-auto flow-arrow d-none d-md-flex">&rarr;</div>
+                                <div class="col-md col-6">
+                                    <div class="flow-step">
+                                        <div class="step-icon"><i class="bi bi-people-fill"></i></div>
+                                        <div class="fw-bold small text-navy">2. Student Team</div>
+                                        <div class="text-muted small" style="font-size: 0.72rem;">Skills Match</div>
+                                    </div>
+                                </div>
+                                <div class="col-auto flow-arrow d-none d-md-flex">&rarr;</div>
+                                <div class="col-md col-6">
+                                    <div class="flow-step">
+                                        <div class="step-icon"><i class="bi bi-gear-wide-connected"></i></div>
+                                        <div class="fw-bold small text-navy">3. Project</div>
+                                        <div class="text-muted small" style="font-size: 0.72rem;">Track & Build</div>
+                                    </div>
+                                </div>
+                                <div class="col-auto flow-arrow d-none d-md-flex">&rarr;</div>
+                                <div class="col-md col-6">
+                                    <div class="flow-step">
+                                        <div class="step-icon"><i class="bi bi-patch-check-fill"></i></div>
+                                        <div class="fw-bold small text-navy">4. Solution</div>
+                                        <div class="text-muted small" style="font-size: 0.72rem;">Archive & Verify</div>
+                                    </div>
+                                </div>
+                                <div class="col-auto flow-arrow d-none d-md-flex">&rarr;</div>
+                                <div class="col-md col-6">
+                                    <div class="flow-step">
+                                        <div class="step-icon"><i class="bi bi-arrow-repeat"></i></div>
+                                        <div class="fw-bold small text-navy">5. Future Scope</div>
+                                        <div class="text-muted small" style="font-size: 0.72rem;">Extend & Improve</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Flash Alerts -->
+        <div class="container mt-4">
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+        </div>
+
+        <!-- Statistics Section -->
+        <section class="py-5 bg-white border-bottom">
+            <div class="container">
+                <div class="row g-4 text-center">
+                    <div class="col-lg-3 col-6">
+                        <div class="stat-card">
+                            <div class="stat-number">500+</div>
+                            <div class="stat-label">Problem Statements</div>
+                            <div class="text-muted small mt-1">Across 10 key technical domains</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <div class="stat-card">
+                            <div class="stat-number">200+</div>
+                            <div class="stat-label">Student Projects</div>
+                            <div class="text-muted small mt-1">Mini &amp; Capstone teams</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <div class="stat-card">
+                            <div class="stat-number">100+</div>
+                            <div class="stat-label">Solutions Archived</div>
+                            <div class="text-muted small mt-1">Preserved for next batches</div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-6">
+                        <div class="stat-card">
+                            <div class="stat-number">50+</div>
+                            <div class="stat-label">Partner Organizations</div>
+                            <div class="text-muted small mt-1">Startups, NGOs &amp; Institutes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why ProblemHub Section -->
+        <section class="py-5">
+            <div class="container">
+                <div class="text-center mb-5">
+                    <span class="badge bg-light text-primary border px-3 py-2 fw-bold text-uppercase mb-2">Why ProblemHub?</span>
+                    <h2 class="text-navy fw-bold">Empowering Students to Build What Matters</h2>
+                    <p class="text-muted-custom mx-auto" style="max-width: 600px;">
+                        Replace repetitive calculator and library management CRUDs with challenges vetted by genuine organizations.
+                    </p>
+                </div>
+
+                <div class="row g-4">
+                    <!-- Feature 1 -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <i class="bi bi-binoculars"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">1. Discover Real Problems</h5>
+                            <p class="text-muted-custom small mb-0">
+                                Find meaningful problems from healthcare, environment, and smart cities instead of repetitive, copy-paste project ideas.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Feature 2 -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <i class="bi bi-funnel"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">2. Smart Search</h5>
+                            <p class="text-muted-custom small mb-0">
+                                Filter authentic challenges precisely by domain, technology stack, difficulty level, duration, and academic project type.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Feature 3 -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <i class="bi bi-archive"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">3. Preserve Solutions</h5>
+                            <p class="text-muted-custom small mb-0">
+                                Learn from architectures, GitHub repos, and test results completed by previous student batches.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Feature 4 -->
+                    <div class="col-lg-3 col-md-6">
+                        <div class="feature-card">
+                            <div class="feature-icon-wrapper">
+                                <i class="bi bi-graph-up-arrow"></i>
+                            </div>
+                            <h5 class="fw-bold mb-2">4. Build on Existing Work</h5>
+                            <p class="text-muted-custom small mb-0">
+                                Pick up documented limitations and future scope from seniors to continue lasting real-world impact.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Problem Statements -->
+        <section class="py-5 bg-white border-top border-bottom">
+            <div class="container">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end mb-4">
+                    <div>
+                        <span class="badge bg-light text-primary border px-3 py-2 fw-bold text-uppercase mb-2">Featured Challenges</span>
+                        <h2 class="text-navy fw-bold mb-1">Authentic Problem Statements</h2>
+                        <p class="text-muted-custom mb-0">Verified challenges submitted by industry partners, NGOs, and research labs.</p>
+                    </div>
+                    <a th:href="@{/problems}" class="btn btn-outline-custom mt-3 mt-md-0">
+                        View All Problems <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-4 col-md-6" th:each="problem : ${recentProblems}">
+                        <div class="card-custom h-100 d-flex flex-column p-4">
+                            <!-- Domain Badge & Source -->
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="badge-domain" th:text="${problem.domain}">Environment</span>
+                                <span class="badge bg-light text-dark border small" th:text="${problem.sourceType}">NGO</span>
+                            </div>
+
+                            <!-- Title -->
+                            <h5 class="fw-bold mb-2">
+                                <a th:href="@{'/problems/' + ${problem.id}}" class="text-decoration-none text-navy" th:text="${problem.title}">
+                                    Smart Waste Collection Route Optimization
+                                </a>
+                            </h5>
+
+                            <!-- Short Description -->
+                            <p class="text-muted-custom small mb-3 flex-grow-1" th:text="${#strings.abbreviate(problem.description, 140)}">
+                                Municipal garbage trucks currently follow static scheduled routes irrespective of whether bins are overflowing...
+                            </p>
+
+                            <!-- Meta Pills -->
+                            <div class="mb-3">
+                                <div class="text-muted small fw-semibold mb-1">Technologies:</div>
+                                <div>
+                                    <span class="badge-tech" th:each="tech : ${problem.techList}" th:text="${tech}">Java</span>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top small text-muted-custom mt-auto">
+                                <div>
+                                    <i class="bi bi-clock me-1"></i> <span th:text="${problem.duration}">4 Weeks</span>
+                                </div>
+                                <div>
+                                    <span th:class="${problem.difficulty == 'Beginner' ? 'badge-difficulty-beginner' : (problem.difficulty == 'Intermediate' ? 'badge-difficulty-intermediate' : 'badge-difficulty-advanced')}"
+                                          th:text="${problem.difficulty}">Intermediate</span>
+                                </div>
+                            </div>
+
+                            <!-- Card Action Buttons -->
+                            <div class="d-flex gap-2 mt-3 pt-2">
+                                <a th:href="@{'/problems/' + ${problem.id}}" class="btn btn-outline-custom btn-sm flex-grow-1 text-center">
+                                    <i class="bi bi-eye me-1"></i> View Problem
+                                </a>
+                                <form th:action="@{'/problems/' + ${problem.id} + '/bookmark'}" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-outline-custom btn-sm" th:title="${problem.bookmarkedByCurrentUser ? 'Remove Bookmark' : 'Bookmark Problem'}">
+                                        <i th:class="${problem.bookmarkedByCurrentUser ? 'bi bi-bookmark-fill text-primary' : 'bi bi-bookmark'}"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Call to Action Banner -->
+        <section class="py-5" style="background: linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%);">
+            <div class="container text-center text-white py-4">
+                <h2 class="fw-bold mb-3">Ready to Solve a Real-World Challenge?</h2>
+                <p class="text-light opacity-75 mx-auto mb-4" style="max-width: 600px;">
+                    Join students, faculty guides, and organizations building solutions with real impact. Browse problems or post an unsolved problem today.
+                </p>
+                <div class="d-flex flex-wrap justify-content-center gap-3">
+                    <a th:href="@{/problems}" class="btn btn-light fw-bold px-4 py-2 text-primary">
+                        <i class="bi bi-search me-1"></i> Browse Problem Statements
+                    </a>
+                    <a th:href="@{/register}" class="btn btn-outline-light fw-bold px-4 py-2">
+                        <i class="bi bi-person-plus me-1"></i> Register Free
+                    </a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

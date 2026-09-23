@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Login to ProblemHub')}"></head>
+<body class="bg-light">
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container" style="max-width: 480px;">
+            <div class="text-center mb-4">
+                <a th:href="@{/}" class="navbar-brand-logo justify-content-center mb-2 fs-3">
+                    <i class="bi bi-lightbulb-fill text-primary"></i>
+                    <span>PROBLEM<span class="accent">HUB</span></span>
+                </a>
+                <h3 class="fw-bold text-navy">Welcome Back</h3>
+                <p class="text-muted-custom small">Sign in to discover problems and manage your projects</p>
+            </div>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Login Card -->
+            <div class="card-custom p-4 p-md-5 mb-4 bg-white shadow-sm">
+                <form th:action="@{/process-login}" method="post">
+                    <input type="hidden" name="redirect" th:value="${redirect}">
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label fw-semibold small text-navy">Email Address</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-envelope"></i></span>
+                            <input type="email" class="form-control border-start-0" id="email" name="email" placeholder="name@college.edu" required autofocus>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between align-items-center mb-1">
+                            <label for="password" class="form-label fw-semibold small text-navy mb-0">Password</label>
+                        </div>
+                        <div class="input-group">
+                            <span class="input-group-text bg-light border-end-0 text-muted"><i class="bi bi-lock"></i></span>
+                            <input type="password" class="form-control border-start-0" id="password" name="password" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="rememberMe" name="rememberMe" checked>
+                            <label class="form-check-label small text-muted-custom" for="rememberMe">
+                                Remember me
+                            </label>
+                        </div>
+                        <span class="small text-muted-custom">Password: <code class="text-primary">password123</code></span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary-custom w-100 py-2 fs-6 mb-3">
+                        <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+                    </button>
+
+                    <div class="text-center small text-muted-custom">
+                        Don't have an account? <a th:href="@{/register}" class="text-primary fw-semibold text-decoration-none">Register here</a>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Viva Demo 1-Click Login Card -->
+            <div class="card-custom p-3 bg-white border border-primary-subtle shadow-sm">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <i class="bi bi-magic text-primary fs-5"></i>
+                    <h6 class="fw-bold text-navy mb-0">Viva Demo 1-Click Login</h6>
+                </div>
+                <p class="text-muted-custom small mb-3" style="font-size: 0.8rem;">
+                    Instant role preview for external examiners and project presentation:
+                </p>
+                <div class="d-grid gap-2">
+                    <a th:href="@{/demo-login(role='STUDENT')}" class="btn btn-light btn-sm text-start border d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-person-fill text-primary me-2"></i> Student (Rahul Sharma)</span>
+                        <span class="badge bg-primary-subtle text-primary">Student Role</span>
+                    </a>
+                    <a th:href="@{/demo-login(role='FACULTY')}" class="btn btn-light btn-sm text-start border d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-person-badge-fill text-success me-2"></i> Faculty (Dr. Kulkarni)</span>
+                        <span class="badge bg-success-subtle text-success">Faculty Guide</span>
+                    </a>
+                    <a th:href="@{/demo-login(role='ORGANIZATION')}" class="btn btn-light btn-sm text-start border d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-building text-warning me-2"></i> Organization (Clean Earth NGO)</span>
+                        <span class="badge bg-warning-subtle text-dark">Industry / NGO</span>
+                    </a>
+                    <a th:href="@{/demo-login(role='ADMIN')}" class="btn btn-light btn-sm text-start border d-flex justify-content-between align-items-center">
+                        <span><i class="bi bi-shield-lock-fill text-danger me-2"></i> Admin (ProblemHub Coordinator)</span>
+                        <span class="badge bg-danger-subtle text-danger">Platform Admin</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

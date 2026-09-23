@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Admin Console - ProblemHub')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                <div>
+                    <span class="badge bg-danger-subtle text-danger border border-danger-subtle px-3 py-1 fw-bold text-uppercase mb-1">System Administration</span>
+                    <h1 class="h2 fw-bold text-navy mb-0">Platform Moderation Console</h1>
+                    <p class="text-muted-custom small mb-0">Review pending challenge submissions, moderate student solution archives, and oversee registered users.</p>
+                </div>
+                <div class="mt-3 mt-md-0 d-flex gap-2">
+                    <a th:href="@{/admin/verify-problems}" class="btn btn-outline-custom btn-sm">
+                        <i class="bi bi-list-check me-1"></i> All Problems
+                    </a>
+                    <a th:href="@{/admin/verify-solutions}" class="btn btn-outline-custom btn-sm">
+                        <i class="bi bi-patch-check me-1"></i> All Solutions
+                    </a>
+                </div>
+            </div>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Metrics Cards -->
+            <div class="row g-3 mb-5">
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" th:text="${stats.totalUsers}">6</div>
+                        <div class="stat-label">Total Users</div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" th:text="${stats.totalProblems}">11</div>
+                        <div class="stat-label">Problems</div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number text-warning" th:text="${stats.pendingProblems}">0</div>
+                        <div class="stat-label">Pending Probs</div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number text-primary" th:text="${stats.totalProjects}">3</div>
+                        <div class="stat-label">Projects</div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number text-success" th:text="${stats.totalSolutions}">2</div>
+                        <div class="stat-label">Solutions</div>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" th:text="${stats.totalOrganizations}">5</div>
+                        <div class="stat-label">Organizations</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 1: Pending Problems Moderation -->
+            <div class="card-custom bg-white p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h4 class="fw-bold text-navy mb-0"><i class="bi bi-clock-history text-warning me-2"></i> Pending Problem Submissions</h4>
+                        <p class="text-muted-custom small mb-0">Problems submitted by organizations or students that require faculty/admin audit.</p>
+                    </div>
+                    <span class="badge bg-warning-subtle text-dark" th:text="${#lists.size(pendingProblems) + ' Pending'}">0 Pending</span>
+                </div>
+
+                <div class="table-responsive" th:if="${not #lists.isEmpty(pendingProblems)}">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Problem Title</th>
+                                <th>Submitted By / Org</th>
+                                <th>Domain</th>
+                                <th>Type</th>
+                                <th class="text-end">Moderation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="p : ${pendingProblems}">
+                                <td>
+                                    <strong class="text-navy" th:text="${p.title}">Title</strong>
+                                    <div class="text-muted small" th:text="${#strings.abbreviate(p.description, 80)}">Desc</div>
+                                </td>
+                                <td th:text="${p.organizationName}">Clean Earth NGO</td>
+                                <td><span class="badge-domain" th:text="${p.domain}">Environment</span></td>
+                                <td th:text="${p.projectType}">Major Project</td>
+                                <td class="text-end">
+                                    <form th:action="@{'/admin/problems/' + ${p.id} + '/approve'}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-success btn-sm me-1" title="Approve Problem">
+                                            <i class="bi bi-check-lg"></i> Approve
+                                        </button>
+                                    </form>
+                                    <form th:action="@{'/admin/problems/' + ${p.id} + '/reject'}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Reject Problem">
+                                            <i class="bi bi-x-lg"></i> Reject
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-3 text-center text-muted small" th:if="${#lists.isEmpty(pendingProblems)}">
+                    <i class="bi bi-check2-circle text-success fs-4 d-block mb-1"></i>
+                    All submitted problem statements are currently reviewed and up to date!
+                </div>
+            </div>
+
+            <!-- SECTION 2: Pending Solutions Moderation -->
+            <div class="card-custom bg-white p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h4 class="fw-bold text-navy mb-0"><i class="bi bi-patch-question text-primary me-2"></i> Pending Solution Submissions</h4>
+                        <p class="text-muted-custom small mb-0">Student project solutions awaiting verification before archiving into the knowledge base.</p>
+                    </div>
+                    <span class="badge bg-primary-subtle text-primary" th:text="${#lists.size(pendingSolutions) + ' Pending'}">0 Pending</span>
+                </div>
+
+                <div class="table-responsive" th:if="${not #lists.isEmpty(pendingSolutions)}">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Solution Title</th>
+                                <th>Team &amp; College</th>
+                                <th>Year</th>
+                                <th class="text-end">Moderation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s : ${pendingSolutions}">
+                                <td>
+                                    <strong class="text-navy" th:text="${s.title}">Title</strong>
+                                    <div class="text-muted small" th:text="${s.technologies}">Stack</div>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold" th:text="${s.teamNames}">Student Names</div>
+                                    <div class="text-muted small" th:text="${s.college}">College</div>
+                                </td>
+                                <td th:text="${s.completionYear}">2026</td>
+                                <td class="text-end">
+                                    <form th:action="@{'/admin/solutions/' + ${s.id} + '/approve'}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-success btn-sm me-1" title="Approve Solution">
+                                            <i class="bi bi-check-lg"></i> Approve
+                                        </button>
+                                    </form>
+                                    <form th:action="@{'/admin/solutions/' + ${s.id} + '/reject'}" method="post" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Reject Solution">
+                                            <i class="bi bi-x-lg"></i> Reject
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="p-3 text-center text-muted small" th:if="${#lists.isEmpty(pendingSolutions)}">
+                    <i class="bi bi-check2-circle text-success fs-4 d-block mb-1"></i>
+                    No pending solutions awaiting review. All archives are verified!
+                </div>
+            </div>
+
+            <!-- SECTION 3: Registered Users Directory -->
+            <div class="card-custom bg-white p-4">
+                <h4 class="fw-bold text-navy mb-3"><i class="bi bi-people text-secondary me-2"></i> Registered Platform Users</h4>
+
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>User</th>
+                                <th>Role</th>
+                                <th>Institution / Department</th>
+                                <th>Year</th>
+                                <th>Joined</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="u : ${users}">
+                                <td>
+                                    <strong class="text-navy" th:text="${u.fullName}">Full Name</strong>
+                                    <div class="text-muted small" th:text="${u.email}">email</div>
+                                </td>
+                                <td>
+                                    <span th:class="${u.role == 'ADMIN' ? 'badge bg-danger-subtle text-danger' : (u.role == 'FACULTY' ? 'badge bg-success-subtle text-success' : (u.role == 'ORGANIZATION' ? 'badge bg-warning-subtle text-dark' : 'badge bg-primary-subtle text-primary'))}"
+                                          th:text="${u.role}">ROLE</span>
+                                </td>
+                                <td th:text="${u.college != null ? u.college : '-'}">College</td>
+                                <td th:text="${u.yearOfStudy != null ? u.yearOfStudy : '-'}">3rd Year</td>
+                                <td class="text-muted small" th:text="${#dates.format(u.createdAt, 'dd MMM yyyy')}">Date</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

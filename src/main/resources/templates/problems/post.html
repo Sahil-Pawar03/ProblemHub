@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Post a Problem - ProblemHub')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container" style="max-width: 820px;">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/problems}" class="text-decoration-none">Explore Problems</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Post a Problem</li>
+                </ol>
+            </nav>
+
+            <div class="text-center mb-4">
+                <span class="badge bg-light text-primary border px-3 py-2 fw-bold text-uppercase mb-2">Crowdsource Challenges</span>
+                <h1 class="h2 fw-bold text-navy">Submit a Real-World Problem Statement</h1>
+                <p class="text-muted-custom small">Help student teams build solutions that solve genuine community, industrial, or academic bottlenecks.</p>
+            </div>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Moderation Notice -->
+            <div class="alert alert-info d-flex align-items-center mb-4 shadow-sm" role="alert">
+                <i class="bi bi-info-circle-fill fs-5 me-2"></i>
+                <div>
+                    <strong>Review Workflow:</strong> Your submitted problem statement will be verified by the ProblemHub coordinator team before publishing to the discovery catalogue.
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card-custom p-4 p-md-5 bg-white shadow-sm mb-5">
+                <form th:action="@{/problems/post}" th:object="${problem}" method="post">
+                    <!-- Title -->
+                    <div class="mb-4">
+                        <label for="title" class="form-label fw-semibold text-navy">Problem Statement Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg fs-6" id="title" th:field="*{title}"
+                               placeholder="e.g. Smart Waste Collection Route Optimization for Municipal Trucks" required>
+                    </div>
+
+                    <!-- Organization Name & Source Type -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="organizationName" class="form-label fw-semibold text-navy">Organization / Institution Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="organizationName" th:field="*{organizationName}"
+                                   placeholder="e.g. Clean Earth NGO or Municipal Corp" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="sourceType" class="form-label fw-semibold text-navy">Source Type <span class="text-danger">*</span></label>
+                            <select class="form-select" id="sourceType" th:field="*{sourceType}" required>
+                                <option value="Industry">Industry Partner</option>
+                                <option value="Startup">Startup</option>
+                                <option value="NGO" selected>Non-Governmental Organization (NGO)</option>
+                                <option value="Government">Government / Public Agency</option>
+                                <option value="Educational">Educational Institution</option>
+                                <option value="Hackathon">Hackathon Challenge</option>
+                                <option value="Innovation Cell">College Innovation Cell</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Domain & Difficulty -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label for="domain" class="form-label fw-semibold text-navy">Domain Category <span class="text-danger">*</span></label>
+                            <select class="form-select" id="domain" th:field="*{domain}" required>
+                                <option value="AI & Data Science">AI &amp; Data Science</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Education">Education</option>
+                                <option value="Agriculture">Agriculture</option>
+                                <option value="Environment" selected>Environment</option>
+                                <option value="Finance">Finance</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Smart City">Smart City</option>
+                                <option value="Social Impact">Social Impact</option>
+                                <option value="Cybersecurity">Cybersecurity</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="difficulty" class="form-label fw-semibold text-navy">Difficulty Level <span class="text-danger">*</span></label>
+                            <select class="form-select" id="difficulty" th:field="*{difficulty}" required>
+                                <option value="Beginner">Beginner (1st/2nd Year)</option>
+                                <option value="Intermediate" selected>Intermediate (3rd Year Mini-Project)</option>
+                                <option value="Advanced">Advanced (Final Year Capstone)</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="duration" class="form-label fw-semibold text-navy">Estimated Duration <span class="text-danger">*</span></label>
+                            <select class="form-select" id="duration" th:field="*{duration}" required>
+                                <option value="1–2 Weeks">1–2 Weeks</option>
+                                <option value="1 Month">1 Month</option>
+                                <option value="2–3 Months" selected>2–3 Months</option>
+                                <option value="3+ Months">3+ Months</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Project Type & Contact Info -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="projectType" class="form-label fw-semibold text-navy">Academic Project Type <span class="text-danger">*</span></label>
+                            <select class="form-select" id="projectType" th:field="*{projectType}" required>
+                                <option value="Mini Project">Mini Project</option>
+                                <option value="Major Project" selected>Major Project</option>
+                                <option value="Hackathon">Hackathon</option>
+                                <option value="Research">Research / Publication</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="contactInfo" class="form-label fw-semibold text-navy">Contact Email / Phone <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="contactInfo" th:field="*{contactInfo}"
+                                   placeholder="e.g. contact@organization.org" required>
+                        </div>
+                    </div>
+
+                    <!-- Problem Description -->
+                    <div class="mb-4">
+                        <label for="description" class="form-label fw-semibold text-navy">Problem Statement Description <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="description" th:field="*{description}" rows="4"
+                                  placeholder="Describe the overall problem in detail..." required></textarea>
+                    </div>
+
+                    <!-- Real-World Context -->
+                    <div class="mb-4">
+                        <label for="realWorldContext" class="form-label fw-semibold text-navy">Real-World Context</label>
+                        <textarea class="form-control" id="realWorldContext" th:field="*{realWorldContext}" rows="3"
+                                  placeholder="Provide field context, background situation, location, or affected population..."></textarea>
+                    </div>
+
+                    <!-- Current Challenges -->
+                    <div class="mb-4">
+                        <label for="currentChallenges" class="form-label fw-semibold text-navy">Current Operational Challenges</label>
+                        <textarea class="form-control" id="currentChallenges" th:field="*{currentChallenges}" rows="3"
+                                  placeholder="What current obstacles or bottlenecks exist without this solution?"></textarea>
+                    </div>
+
+                    <!-- Expected Outcome -->
+                    <div class="mb-4">
+                        <label for="expectedOutcome" class="form-label fw-semibold text-navy">Expected Outcome / Solution Vision <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="expectedOutcome" th:field="*{expectedOutcome}" rows="3"
+                                  placeholder="What should the finished application or system do?" required></textarea>
+                    </div>
+
+                    <!-- Skills & Technologies -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="requiredSkills" class="form-label fw-semibold text-navy">Required Skills <span class="text-muted fw-normal">(Comma separated)</span></label>
+                            <input type="text" class="form-control" id="requiredSkills" th:field="*{requiredSkills}"
+                                   placeholder="e.g. Java, SQL, Object-Oriented Design, Algorithms">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="suggestedTech" class="form-label fw-semibold text-navy">Suggested Technologies <span class="text-muted fw-normal">(Comma separated)</span></label>
+                            <input type="text" class="form-control" id="suggestedTech" th:field="*{suggestedTech}"
+                                   placeholder="e.g. Java, MySQL, Spring Boot, Leaflet, HTML/CSS">
+                        </div>
+                    </div>
+
+                    <!-- Deliverables & Future Scope -->
+                    <div class="mb-4">
+                        <label for="deliverables" class="form-label fw-semibold text-navy">Expected Deliverables</label>
+                        <textarea class="form-control" id="deliverables" th:field="*{deliverables}" rows="3"
+                                  placeholder="1. Working web prototype&#10;2. Database schema design&#10;3. Final documentation"></textarea>
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="whyItMatters" class="form-label fw-semibold text-navy">Why This Problem Matters</label>
+                        <textarea class="form-control" id="whyItMatters" th:field="*{whyItMatters}" rows="2"
+                                  placeholder="Why is solving this important to your organization or society?"></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <a th:href="@{/problems}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary-custom px-4 py-2 fs-6">
+                            <i class="bi bi-send-check me-1"></i> Submit Problem
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

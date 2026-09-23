@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header(${solution.title})}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/solutions}" class="text-decoration-none">Solutions Library</a></li>
+                    <li class="breadcrumb-item active text-truncate" style="max-width: 350px;" aria-current="page" th:text="${solution.title}">Solution Details</li>
+                </ol>
+            </nav>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <div class="row g-4">
+                <!-- Left Main Content Column -->
+                <div class="col-lg-8">
+                    <!-- Title & Header Card -->
+                    <div class="card-custom p-4 p-md-5 mb-4 bg-white">
+                        <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
+                            <span class="badge-domain fs-6" th:text="${solution.problemDomain}">Healthcare</span>
+                            <span class="badge bg-light text-dark border">
+                                <i class="bi bi-calendar3 me-1"></i> Completed <span th:text="${solution.completionYear}">2025</span>
+                            </span>
+                            <span th:if="${solution.verified}" class="badge bg-success-subtle text-success border border-success-subtle d-inline-flex align-items-center gap-1">
+                                <i class="bi bi-patch-check-fill"></i> Verified Solution
+                            </span>
+                        </div>
+
+                        <h1 class="h2 fw-bold text-navy mb-2" th:text="${solution.title}">
+                            CareConnect: Low-Bandwidth Rural Clinic Triage System
+                        </h1>
+
+                        <!-- Problem Solved Link -->
+                        <div class="p-3 bg-light rounded border mb-4">
+                            <div class="small text-muted fw-semibold mb-1">ORIGINAL CHALLENGE SOLVED:</div>
+                            <h6 class="fw-bold text-navy mb-1">
+                                <a th:href="@{'/problems/' + ${solution.problemId}}" class="text-primary text-decoration-none" th:text="${solution.problemTitle}">
+                                    Rural Primary Healthcare Tele-Triage &amp; Clinic Appointment Scheduler
+                                </a>
+                            </h6>
+                            <a th:href="@{'/problems/' + ${solution.problemId}}" class="small text-decoration-none">
+                                View full original problem statement &rarr;
+                            </a>
+                        </div>
+
+                        <!-- Team & College -->
+                        <div class="d-flex flex-wrap gap-4 text-muted-custom small mb-4 pb-3 border-bottom">
+                            <div>
+                                <i class="bi bi-people-fill me-1 text-primary"></i> Team:
+                                <strong class="text-navy" th:text="${solution.teamNames}">Rahul Sharma, Sneha Patil</strong>
+                            </div>
+                            <div>
+                                <i class="bi bi-mortarboard-fill me-1 text-success"></i> College:
+                                <strong class="text-navy" th:text="${solution.college}">DKTE Society's TEI</strong>
+                            </div>
+                            <div>
+                                <i class="bi bi-star-fill text-warning me-1"></i> Rating:
+                                <strong class="text-navy" th:text="${solution.averageRating}">4.8</strong> / 5.0
+                                (<span th:text="${solution.ratingsCount}">3</span> reviews)
+                            </div>
+                        </div>
+
+                        <!-- Action Links Row -->
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            <a th:if="${solution.githubUrl}" th:href="${solution.githubUrl}" target="_blank" class="btn btn-outline-dark px-3 py-2 d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-github"></i> View GitHub Repository
+                            </a>
+                            <a th:if="${solution.documentationUrl}" th:href="${solution.documentationUrl}" target="_blank" class="btn btn-outline-secondary px-3 py-2 d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-file-earmark-pdf"></i> Read Documentation
+                            </a>
+                            <a th:if="${solution.demoUrl}" th:href="${solution.demoUrl}" target="_blank" class="btn btn-outline-primary px-3 py-2 d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-box-arrow-up-right"></i> Live Demo
+                            </a>
+                            <button type="button" class="btn btn-outline-custom px-3 py-2 btn-share-link d-inline-flex align-items-center gap-2">
+                                <i class="bi bi-share"></i> Share
+                            </button>
+                        </div>
+
+                        <!-- Solution Overview -->
+                        <div class="mb-4">
+                            <h4 class="fw-bold text-navy mb-2">Solution Overview</h4>
+                            <p class="text-muted-custom leading-relaxed" style="white-space: pre-line;" th:text="${solution.solutionOverview}">
+                                Solution overview...
+                            </p>
+                        </div>
+
+                        <!-- Architecture & Technical Design -->
+                        <div class="mb-4" th:if="${solution.architectureDetails}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-diagram-3-fill text-primary me-2"></i> System Architecture</h4>
+                            <div class="p-3 bg-light rounded border">
+                                <p class="text-muted-custom leading-relaxed mb-0" style="white-space: pre-line;" th:text="${solution.architectureDetails}">
+                                    Layered MVC pattern using Spring Boot Controller -> Service -> JDBC DAO -> MySQL...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Implementation Details -->
+                        <div class="mb-4" th:if="${solution.implementationDetails}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-code-slash text-success me-2"></i> Implementation Details</h4>
+                            <p class="text-muted-custom leading-relaxed" style="white-space: pre-line;" th:text="${solution.implementationDetails}">
+                                Details of implementation, algorithms, and database design...
+                            </p>
+                        </div>
+
+                        <!-- Key Features -->
+                        <div class="mb-4" th:if="${solution.keyFeatures}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-check-circle-fill text-primary me-2"></i> Key Features Delivered</h4>
+                            <div class="p-3 bg-white border rounded">
+                                <pre class="text-muted-custom mb-0" style="font-family: inherit; white-space: pre-line;" th:text="${solution.keyFeatures}"></pre>
+                            </div>
+                        </div>
+
+                        <!-- Results & Performance -->
+                        <div class="mb-4" th:if="${solution.results}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-graph-up-arrow text-success me-2"></i> Results &amp; Real-World Testing</h4>
+                            <div class="p-3 bg-success-subtle text-dark border border-success-subtle rounded">
+                                <p class="mb-0" style="white-space: pre-line;" th:text="${solution.results}">
+                                    Field test results...
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Challenges Encountered -->
+                        <div class="mb-4" th:if="${solution.challenges}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-shield-exclamation text-warning me-2"></i> Challenges Faced During Development</h4>
+                            <p class="text-muted-custom small" style="white-space: pre-line;" th:text="${solution.challenges}">
+                                Technical bottlenecks tackled by the team...
+                            </p>
+                        </div>
+
+                        <!-- Limitations -->
+                        <div class="mb-4" th:if="${solution.limitations}">
+                            <h4 class="fw-bold text-navy mb-2"><i class="bi bi-exclamation-triangle-fill text-danger me-2"></i> Known Limitations</h4>
+                            <div class="p-3 bg-danger-subtle text-danger-emphasis border border-danger-subtle rounded small">
+                                <p class="mb-0" style="white-space: pre-line;" th:text="${solution.limitations}">
+                                    Limitations of current version...
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CRITICAL SECTION: "How Can You Improve This?" (Build on Existing Work) -->
+                    <div class="card-custom p-4 p-md-5 mb-4 bg-white border-2 border-primary">
+                        <div class="d-flex align-items-center gap-2 mb-3">
+                            <span class="badge bg-primary fs-6 px-3 py-2">
+                                <i class="bi bi-arrow-repeat me-1"></i> Continuous Innovation
+                            </span>
+                            <h3 class="fw-bold text-navy mb-0">How Can You Improve This?</h3>
+                        </div>
+
+                        <p class="text-muted-custom leading-relaxed mb-3">
+                            The original student team documented specific ideas and unresolved scope that the next batch of students can take up to build version 2.0:
+                        </p>
+
+                        <div class="p-3 bg-light rounded border mb-4">
+                            <h6 class="fw-bold text-navy mb-2"><i class="bi bi-lightbulb text-warning me-1"></i> Future Scope &amp; Suggested Improvements:</h6>
+                            <p class="text-muted-custom small mb-0" style="white-space: pre-line;" th:text="${solution.futureScope}">
+                                1. Implement offline progressive web app with background sync&#10;2. Add vernacular language audio prompts&#10;3. Integrate WebRTC telemedicine consultations
+                            </p>
+                        </div>
+
+                        <div class="p-3 bg-primary-subtle rounded border border-primary-subtle d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+                            <div>
+                                <div class="fw-bold text-navy">Ready to extend this project for your semester?</div>
+                                <div class="text-muted small">You will be registered as a new student team working on this verified problem.</div>
+                            </div>
+                            <a th:href="@{'/projects/start/' + ${solution.problemId}}" class="btn btn-primary-custom text-nowrap">
+                                <i class="bi bi-rocket-takeoff-fill me-1"></i> Start New Project From This Solution
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Reviews & Ratings Section -->
+                    <div class="card-custom p-4 p-md-5 bg-white mb-4">
+                        <h4 class="fw-bold text-navy mb-3">Peer &amp; Faculty Reviews</h4>
+
+                        <!-- Review Submission Form for Logged-In Users -->
+                        <div class="card p-3 bg-light border mb-4" th:if="${session.currentUser != null}">
+                            <h6 class="fw-bold text-navy mb-2">Leave a Rating &amp; Review</h6>
+                            <form th:action="@{'/solutions/' + ${solution.id} + '/rate'}" method="post">
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold text-navy">Your Rating (1 to 5 Stars):</label>
+                                    <select class="form-select form-select-sm" name="ratingValue" style="max-width: 180px;" required>
+                                        <option value="5" th:selected="${userRating != null and userRating.ratingValue == 5}">⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                                        <option value="4" th:selected="${userRating != null and userRating.ratingValue == 4}">⭐⭐⭐⭐ (4 - Very Good)</option>
+                                        <option value="3" th:selected="${userRating != null and userRating.ratingValue == 3}">⭐⭐⭐ (3 - Good)</option>
+                                        <option value="2" th:selected="${userRating != null and userRating.ratingValue == 2}">⭐⭐ (2 - Fair)</option>
+                                        <option value="1" th:selected="${userRating != null and userRating.ratingValue == 1}">⭐ (1 - Needs Work)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold text-navy">Review Comments / Technical Feedback:</label>
+                                    <textarea class="form-control" name="reviewComment" rows="2"
+                                              th:text="${userRating != null ? userRating.reviewComment : ''}"
+                                              placeholder="Share constructive feedback on their architecture, results, or ease of extension..." required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary-custom btn-sm">
+                                    <i class="bi bi-check2 me-1"></i> Submit Review
+                                </button>
+                            </form>
+                        </div>
+
+                        <div class="alert alert-light border small text-muted" th:if="${session.currentUser == null}">
+                            <a th:href="@{/login}" class="text-primary fw-semibold">Sign in</a> to leave a review and rating for this project.
+                        </div>
+
+                        <!-- Existing Reviews List -->
+                        <div th:if="${not #lists.isEmpty(ratings)}">
+                            <div class="border-bottom py-3" th:each="r : ${ratings}">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <div>
+                                        <strong class="text-navy" th:text="${r.userName}">Dr. Arvind Kulkarni</strong>
+                                        <span class="badge bg-light text-dark border small ms-1" th:text="${r.userRole}">FACULTY</span>
+                                    </div>
+                                    <div class="text-warning">
+                                        <span th:each="star : ${#numbers.sequence(1, r.ratingValue)}">★</span>
+                                    </div>
+                                </div>
+                                <p class="text-muted-custom small mb-1" th:text="${r.reviewComment}">
+                                    Exceptional real-world implementation...
+                                </p>
+                                <div class="text-muted" style="font-size: 0.75rem;" th:text="${#dates.format(r.createdAt, 'dd MMM yyyy')}">
+                                    20 Jan 2026
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-muted small py-3" th:if="${#lists.isEmpty(ratings)}">
+                            No reviews posted yet. Be the first to evaluate this student project!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Sidebar Column -->
+                <div class="col-lg-4">
+                    <!-- Tech Stack Card -->
+                    <div class="card-custom p-4 mb-4 bg-white">
+                        <h5 class="fw-bold text-navy mb-3 pb-2 border-bottom">Technologies Used</h5>
+                        <div class="mb-3">
+                            <span class="badge-tech" th:each="tech : ${solution.techList}" th:text="${tech}">Java</span>
+                        </div>
+                        <div class="text-muted small">
+                            Full Stack: <span class="fw-semibold text-navy" th:text="${solution.technologies}">Java, Spring Boot, MySQL, Bootstrap</span>
+                        </div>
+                    </div>
+
+                    <!-- Project Metadata Card -->
+                    <div class="card-custom p-4 mb-4 bg-white">
+                        <h5 class="fw-bold text-navy mb-3 pb-2 border-bottom">Project Metadata</h5>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-semibold">Completion Year</div>
+                            <div class="text-navy fw-semibold" th:text="${solution.completionYear}">2025</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-semibold">Submitting Institution</div>
+                            <div class="text-navy fw-semibold" th:text="${solution.college}">DKTE Society's TEI</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="text-muted small fw-semibold">Team Contributors</div>
+                            <div class="text-navy fw-semibold" th:text="${solution.teamNames}">Student Names</div>
+                        </div>
+
+                        <div class="mb-0">
+                            <div class="text-muted small fw-semibold">Audit Status</div>
+                            <span class="badge bg-success-subtle text-success border border-success-subtle">
+                                <i class="bi bi-shield-check me-1"></i> Verified &amp; Archived
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Quick Links Box -->
+                    <div class="card-custom p-4 bg-light border">
+                        <h6 class="fw-bold text-navy mb-2"><i class="bi bi-link-45deg me-1"></i> Direct Links</h6>
+                        <ul class="list-unstyled small mb-0">
+                            <li class="mb-2" th:if="${solution.githubUrl}">
+                                <a th:href="${solution.githubUrl}" target="_blank" class="text-decoration-none">
+                                    <i class="bi bi-github me-1"></i> Open GitHub Repository
+                                </a>
+                            </li>
+                            <li class="mb-2" th:if="${solution.documentationUrl}">
+                                <a th:href="${solution.documentationUrl}" target="_blank" class="text-decoration-none">
+                                    <i class="bi bi-file-earmark-text me-1"></i> Open Project Documentation
+                                </a>
+                            </li>
+                            <li>
+                                <a th:href="@{'/problems/' + ${solution.problemId}}" class="text-decoration-none">
+                                    <i class="bi bi-file-earmark-code me-1"></i> Open Original Problem
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

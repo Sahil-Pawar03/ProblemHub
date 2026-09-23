@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Submit Completed Solution - ProblemHub')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container" style="max-width: 820px;">
+            <!-- Breadcrumbs -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/}" class="text-decoration-none">Home</a></li>
+                    <li class="breadcrumb-item"><a th:href="@{/solutions}" class="text-decoration-none">Solutions</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Submit Solution</li>
+                </ol>
+            </nav>
+
+            <div class="text-center mb-4">
+                <span class="badge bg-light text-primary border px-3 py-2 fw-bold text-uppercase mb-2">Preserve Knowledge</span>
+                <h1 class="h2 fw-bold text-navy">Archive Your Completed Project</h1>
+                <p class="text-muted-custom small">Preserve your architecture, results, and future scope so subsequent student batches can build upon your work.</p>
+            </div>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Review Notice -->
+            <div class="alert alert-info d-flex align-items-center mb-4 shadow-sm" role="alert">
+                <i class="bi bi-info-circle-fill fs-5 me-2"></i>
+                <div>
+                    <strong>Review Workflow:</strong> Your solution will be reviewed and then added to the ProblemHub knowledge base.
+                </div>
+            </div>
+
+            <!-- Form Card -->
+            <div class="card-custom p-4 p-md-5 bg-white shadow-sm mb-5">
+                <form th:action="@{/solutions/submit}" th:object="${solution}" method="post">
+                    <input type="hidden" th:field="*{projectId}">
+
+                    <!-- Solution Title -->
+                    <div class="mb-4">
+                        <label for="title" class="form-label fw-semibold text-navy">Project / Solution Title <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control form-control-lg fs-6" id="title" th:field="*{title}"
+                               placeholder="e.g. CareConnect: Low-Bandwidth Rural Clinic Triage System" required>
+                    </div>
+
+                    <!-- Problem Statement Link -->
+                    <div class="mb-4">
+                        <label for="problemId" class="form-label fw-semibold text-navy">Problem Statement Solved <span class="text-danger">*</span></label>
+                        <select class="form-select" id="problemId" th:field="*{problemId}" required>
+                            <option value="">-- Select Problem Statement --</option>
+                            <option th:each="prob : ${problems}"
+                                    th:value="${prob.id}"
+                                    th:text="${prob.title + ' (' + prob.domain + ')'}">Problem</option>
+                        </select>
+                        <div class="form-text small">Select the verified challenge that your student team solved.</div>
+                    </div>
+
+                    <!-- Team Names & College -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-6">
+                            <label for="teamNames" class="form-label fw-semibold text-navy">Team Member Names <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="teamNames" th:field="*{teamNames}"
+                                   placeholder="e.g. Rahul Sharma, Sneha Patil, Amit Deshmukh" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="college" class="form-label fw-semibold text-navy">College / Institution <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="college" th:field="*{college}"
+                                   placeholder="e.g. DKTE Society's TEI, Ichalkaranji" required>
+                        </div>
+                    </div>
+
+                    <!-- Year & Technologies -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label for="completionYear" class="form-label fw-semibold text-navy">Completion Year <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control" id="completionYear" th:field="*{completionYear}"
+                                   min="2020" max="2030" required>
+                        </div>
+                        <div class="col-md-8">
+                            <label for="technologies" class="form-label fw-semibold text-navy">Technologies Used <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" id="technologies" th:field="*{technologies}"
+                                   placeholder="e.g. Java, Spring Boot, MySQL, JDBC, Bootstrap 5" required>
+                        </div>
+                    </div>
+
+                    <!-- Solution Overview -->
+                    <div class="mb-4">
+                        <label for="solutionOverview" class="form-label fw-semibold text-navy">Solution Overview &amp; Abstract <span class="text-danger">*</span></label>
+                        <textarea class="form-control" id="solutionOverview" th:field="*{solutionOverview}" rows="4"
+                                  placeholder="Summarize the core architecture and purpose of your system..." required></textarea>
+                    </div>
+
+                    <!-- Architecture Details -->
+                    <div class="mb-4">
+                        <label for="architectureDetails" class="form-label fw-semibold text-navy">System Architecture &amp; Component Design</label>
+                        <textarea class="form-control" id="architectureDetails" th:field="*{architectureDetails}" rows="3"
+                                  placeholder="Describe the software tiers (Controller -> Service -> JDBC DAO -> Database), data flow, and components..."></textarea>
+                    </div>
+
+                    <!-- Implementation Details -->
+                    <div class="mb-4">
+                        <label for="implementationDetails" class="form-label fw-semibold text-navy">Implementation Details</label>
+                        <textarea class="form-control" id="implementationDetails" th:field="*{implementationDetails}" rows="3"
+                                  placeholder="Details on algorithms, frameworks, security hashing, database indexes, or API integration..."></textarea>
+                    </div>
+
+                    <!-- Key Features -->
+                    <div class="mb-4">
+                        <label for="keyFeatures" class="form-label fw-semibold text-navy">Key Features</label>
+                        <textarea class="form-control" id="keyFeatures" th:field="*{keyFeatures}" rows="3"
+                                  placeholder="1. Triage scoring calculation&#10;2. Dynamic queue scheduling&#10;3. Printable medical token"></textarea>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="mb-4">
+                        <label for="results" class="form-label fw-semibold text-navy">Results &amp; Evaluation</label>
+                        <textarea class="form-control" id="results" th:field="*{results}" rows="3"
+                                  placeholder="Quantifiable testing results, performance metrics, or field deployment feedback..."></textarea>
+                    </div>
+
+                    <!-- Challenges Encountered -->
+                    <div class="mb-4">
+                        <label for="challenges" class="form-label fw-semibold text-navy">Challenges Faced</label>
+                        <textarea class="form-control" id="challenges" th:field="*{challenges}" rows="2"
+                                  placeholder="What technical or operational challenges did your team encounter during development?"></textarea>
+                    </div>
+
+                    <!-- Limitations -->
+                    <div class="mb-4">
+                        <label for="limitations" class="form-label fw-semibold text-navy">Known Limitations</label>
+                        <textarea class="form-control" id="limitations" th:field="*{limitations}" rows="2"
+                                  placeholder="What limitations currently exist in this version? (e.g. Requires constant internet; offline mode not yet added)"></textarea>
+                    </div>
+
+                    <!-- Future Scope (Vital for other students to improve this) -->
+                    <div class="mb-4 p-3 bg-light rounded border border-primary-subtle">
+                        <label for="futureScope" class="form-label fw-bold text-navy">
+                            <i class="bi bi-lightbulb-fill text-primary me-1"></i> Future Scope / How Next Batch Can Improve This <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="futureScope" th:field="*{futureScope}" rows="3"
+                                  placeholder="Suggestions for future students who want to build upon or improve your project (e.g. Add Progressive Web App offline sync; Voice prompts)..." required></textarea>
+                        <div class="form-text small">This is the heart of ProblemHub's continuous improvement vision!</div>
+                    </div>
+
+                    <!-- Repository, Documentation, Demo Links -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-md-4">
+                            <label for="githubUrl" class="form-label fw-semibold text-navy">GitHub Repository URL</label>
+                            <input type="url" class="form-control" id="githubUrl" th:field="*{githubUrl}"
+                                   placeholder="https://github.com/...">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="documentationUrl" class="form-label fw-semibold text-navy">Documentation Link</label>
+                            <input type="url" class="form-control" id="documentationUrl" th:field="*{documentationUrl}"
+                                   placeholder="https://docs.google.com/...">
+                        </div>
+                        <div class="col-md-4">
+                            <label for="demoUrl" class="form-label fw-semibold text-navy">Live Demo Link (Optional)</label>
+                            <input type="url" class="form-control" id="demoUrl" th:field="*{demoUrl}"
+                                   placeholder="https://demo.app">
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                        <a th:href="@{/solutions}" class="btn btn-outline-secondary">Cancel</a>
+                        <button type="submit" class="btn btn-primary-custom px-4 py-2 fs-6">
+                            <i class="bi bi-check-circle-fill me-1"></i> Submit Solution
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

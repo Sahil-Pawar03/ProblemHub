@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Student Dashboard - ProblemHub')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Welcome Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                <div>
+                    <span class="badge bg-light text-primary border px-3 py-1 fw-bold text-uppercase mb-1" th:text="${currentUser.role}">STUDENT</span>
+                    <h1 class="h2 fw-bold text-navy mb-0">Welcome, <span th:text="${currentUser.fullName}">Rahul Sharma</span></h1>
+                    <p class="text-muted-custom small mb-0">
+                        <span th:text="${currentUser.college}">DKTE Society's TEI</span> &bull;
+                        <span th:text="${currentUser.department}">AI &amp; Data Science</span> &bull;
+                        <span th:text="${currentUser.yearOfStudy}">3rd Year</span>
+                    </p>
+                </div>
+                <div class="mt-3 mt-md-0 d-flex gap-2">
+                    <a th:href="@{/problems}" class="btn btn-primary-custom btn-sm">
+                        <i class="bi bi-compass me-1"></i> Explore Problems
+                    </a>
+                    <a th:href="@{/profile}" class="btn btn-outline-custom btn-sm">
+                        <i class="bi bi-person-gear me-1"></i> Edit Profile
+                    </a>
+                </div>
+            </div>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <!-- Metrics Cards Row -->
+            <div class="row g-3 mb-5">
+                <div class="col-lg-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" th:text="${bookmarkCount}">3</div>
+                        <div class="stat-label">Bookmarked</div>
+                        <a th:href="@{/bookmarks}" class="small text-decoration-none mt-2 d-inline-block">View Saved &rarr;</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number" th:text="${projectCount}">2</div>
+                        <div class="stat-label">My Projects</div>
+                        <a th:href="@{/projects/my}" class="small text-decoration-none mt-2 d-inline-block">Manage Teams &rarr;</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number text-success" th:text="${completedCount}">1</div>
+                        <div class="stat-label">Completed</div>
+                        <a th:href="@{/projects/my(tab='COMPLETED')}" class="small text-decoration-none mt-2 d-inline-block">View Completed &rarr;</a>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-6">
+                    <div class="stat-card">
+                        <div class="stat-number text-secondary" th:text="${solutionsViewed}">12</div>
+                        <div class="stat-label">Solutions Viewed</div>
+                        <a th:href="@{/solutions}" class="small text-decoration-none mt-2 d-inline-block">Explore Library &rarr;</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 1: Active Projects In Progress -->
+            <div class="mb-5" th:if="${not #lists.isEmpty(activeProjects)}">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-bold text-navy mb-0"><i class="bi bi-kanban text-primary me-2"></i> My Active Projects</h4>
+                    <a th:href="@{/projects/my}" class="small text-decoration-none">View All Projects &rarr;</a>
+                </div>
+
+                <div class="row g-3">
+                    <div class="col-md-6" th:each="proj : ${activeProjects}">
+                        <div class="card-custom p-4 bg-white">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <span class="badge bg-primary-subtle text-primary border border-primary-subtle" th:text="${proj.status}">IN_PROGRESS</span>
+                                <span class="text-muted small" th:text="${proj.startDate}">2026-01-15</span>
+                            </div>
+
+                            <h5 class="fw-bold text-navy mb-1">
+                                <a th:href="@{'/projects/' + ${proj.id}}" class="text-decoration-none text-navy" th:text="${proj.title}">
+                                    Smart Waste Collection System
+                                </a>
+                            </h5>
+
+                            <div class="text-muted small mb-3">
+                                Problem: <span class="fw-semibold" th:text="${proj.problemTitle}">Smart Waste Collection Route Optimization</span>
+                            </div>
+
+                            <!-- Progress with bar -->
+                            <div class="mb-3">
+                                <div class="d-flex justify-content-between small fw-bold text-navy mb-1">
+                                    <span>Progress</span>
+                                    <span th:text="${proj.progressPercent + '%'}">65%</span>
+                                </div>
+                                <div class="progress progress-custom">
+                                    <div class="progress-bar progress-bar-custom" role="progressbar"
+                                         th:style="'width: ' + ${proj.progressPercent} + '%;'"
+                                         th:aria-valuenow="${proj.progressPercent}" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                                <a th:href="@{'/projects/' + ${proj.id}}" class="btn btn-outline-custom btn-sm">
+                                    <i class="bi bi-eye me-1"></i> View Project
+                                </a>
+                                <a th:href="@{'/solutions/new?projectId=' + ${proj.id}}" class="btn btn-primary-custom btn-sm">
+                                    <i class="bi bi-check2-circle me-1"></i> Submit Solution
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SECTION 2: Recommended For You (Viva Highlight: Score-Based Recommendation Algorithm) -->
+            <div class="mb-5">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-3">
+                    <div>
+                        <div class="d-flex align-items-center gap-2">
+                            <h4 class="fw-bold text-navy mb-0"><i class="bi bi-stars text-primary me-2"></i> Recommended for You</h4>
+                            <span class="badge bg-light text-primary border small">Score-Based Matching</span>
+                        </div>
+                        <p class="text-muted-custom small mb-0">Matched against your technical skills (<strong th:text="${currentUser.skills}">Java, MySQL</strong>) and interests.</p>
+                    </div>
+                    <a th:href="@{/profile}" class="small text-decoration-none mt-2 mt-md-0">Customize Skills in Profile &rarr;</a>
+                </div>
+
+                <div class="row g-4" th:if="${not #lists.isEmpty(recommendations)}">
+                    <div class="col-lg-6" th:each="rec : ${recommendations}">
+                        <div class="card-custom recommendation-card h-100 p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="badge-domain" th:text="${rec.problem.domain}">Environment</span>
+                                <span class="badge bg-primary rounded-pill px-3 py-1">
+                                    <i class="bi bi-bullseye me-1"></i> <span th:text="${rec.score + ' Match Pts'}">85 Match Pts</span>
+                                </span>
+                            </div>
+
+                            <h5 class="fw-bold text-navy mb-2">
+                                <a th:href="@{'/problems/' + ${rec.problem.id}}" class="text-decoration-none text-navy" th:text="${rec.problem.title}">
+                                    Problem Title
+                                </a>
+                            </h5>
+
+                            <!-- Plain English Recommendation Reason -->
+                            <div class="p-2 px-3 bg-white rounded border small text-primary fw-semibold mb-3 border-start border-3 border-primary">
+                                <i class="bi bi-info-circle-fill me-1"></i> <span th:text="${rec.explanation}">Recommended because it matches your Java + SQL skills and your interest in Healthcare.</span>
+                            </div>
+
+                            <p class="text-muted-custom small mb-3 flex-grow-1" th:text="${#strings.abbreviate(rec.problem.description, 140)}">
+                                Problem description snippet...
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center pt-3 border-top small text-muted-custom mt-auto">
+                                <div>
+                                    <i class="bi bi-clock me-1"></i> <span th:text="${rec.problem.duration}">1 Month</span> &bull;
+                                    <span th:text="${rec.problem.difficulty}">Intermediate</span>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a th:href="@{'/problems/' + ${rec.problem.id}}" class="btn btn-outline-custom btn-sm">
+                                        View Details
+                                    </a>
+                                    <a th:href="@{'/projects/start/' + ${rec.problem.id}}" class="btn btn-primary-custom btn-sm">
+                                        Start Project
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="empty-state py-4" th:if="${#lists.isEmpty(recommendations)}">
+                    <p class="text-muted small mb-3">Add skills (e.g. Java, MySQL, Python) and interests in your profile to activate personalized project matching!</p>
+                    <a th:href="@{/profile}" class="btn btn-primary-custom btn-sm">Update Your Skills &rarr;</a>
+                </div>
+            </div>
+
+            <!-- SECTION 3: Recently Added Problems -->
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="fw-bold text-navy mb-0"><i class="bi bi-clock-history text-primary me-2"></i> Recently Added Problems</h4>
+                    <a th:href="@{/problems}" class="small text-decoration-none">Explore All &rarr;</a>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-lg-3 col-md-6" th:each="p : ${recentProblems}">
+                        <div class="card-custom p-3 bg-white h-100 d-flex flex-column">
+                            <span class="badge-domain align-self-start mb-2" th:text="${p.domain}">Healthcare</span>
+                            <h6 class="fw-bold text-navy mb-2">
+                                <a th:href="@{'/problems/' + ${p.id}}" class="text-decoration-none text-navy" th:text="${#strings.abbreviate(p.title, 60)}">
+                                    Problem Title
+                                </a>
+                            </h6>
+                            <p class="text-muted-custom small mb-3 flex-grow-1" th:text="${#strings.abbreviate(p.description, 90)}">
+                                Description...
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center pt-2 border-top small text-muted-custom mt-auto">
+                                <span th:text="${p.difficulty}">Intermediate</span>
+                                <a th:href="@{'/problems/' + ${p.id}}" class="text-primary fw-semibold text-decoration-none">View &rarr;</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Continue Exploring Banner -->
+            <div class="card-custom p-4 bg-white border text-center">
+                <h4 class="fw-bold text-navy mb-2">Continue Exploring ProblemHub</h4>
+                <p class="text-muted-custom small mx-auto mb-3" style="max-width: 500px;">
+                    Dive into our catalogue of verified challenges across 10 domains or check the solutions library to study implementations.
+                </p>
+                <div class="d-flex justify-content-center gap-2">
+                    <a th:href="@{/problems}" class="btn btn-primary-custom btn-sm px-4">
+                        <i class="bi bi-compass me-1"></i> Browse All Problems
+                    </a>
+                    <a th:href="@{/solutions}" class="btn btn-outline-custom btn-sm px-4">
+                        <i class="bi bi-collection me-1"></i> Browse Solutions
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

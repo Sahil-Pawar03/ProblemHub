@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Verify Solutions - ProblemHub')}"></head>
+<body>
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container">
+            <!-- Header -->
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+                <div>
+                    <h1 class="h2 fw-bold text-navy mb-1">Verify &amp; Moderate Solutions</h1>
+                    <p class="text-muted-custom mb-0">Evaluate student project archives before making them permanently accessible to subsequent batches.</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <a th:href="@{/admin}" class="btn btn-outline-custom btn-sm">
+                        &larr; Back to Admin Console
+                    </a>
+                </div>
+            </div>
+
+            <!-- Flash Alerts -->
+            <div th:replace="~{fragments/alerts :: alerts}"></div>
+
+            <div class="card-custom bg-white p-4">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
+                            <tr>
+                                <th>#</th>
+                                <th>Project / Solution</th>
+                                <th>Team &amp; College</th>
+                                <th>Year</th>
+                                <th>Status</th>
+                                <th class="text-end">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="s : ${solutions}">
+                                <td th:text="${s.id}">1</td>
+                                <td>
+                                    <strong class="text-navy" th:text="${s.title}">Title</strong>
+                                    <div class="text-muted small" th:text="${s.technologies}">Tech Stack</div>
+                                </td>
+                                <td>
+                                    <div class="fw-semibold text-navy" th:text="${s.teamNames}">Team</div>
+                                    <div class="text-muted small" th:text="${s.college}">College</div>
+                                </td>
+                                <td th:text="${s.completionYear}">2025</td>
+                                <td>
+                                    <span th:class="${s.status == 'APPROVED' ? 'badge bg-success-subtle text-success' : (s.status == 'PENDING' ? 'badge bg-warning-subtle text-dark' : 'badge bg-danger-subtle text-danger')}"
+                                          th:text="${s.status}">STATUS</span>
+                                </td>
+                                <td class="text-end">
+                                    <div class="d-inline-flex gap-1">
+                                        <a th:href="@{'/solutions/' + ${s.id}}" class="btn btn-outline-secondary btn-sm" title="View Full Solution">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <form th:if="${s.status != 'APPROVED'}" th:action="@{'/admin/solutions/' + ${s.id} + '/approve'}" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-success btn-sm" title="Approve">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                        </form>
+                                        <form th:if="${s.status != 'REJECTED'}" th:action="@{'/admin/solutions/' + ${s.id} + '/reject'}" method="post" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm" title="Reject">
+                                                <i class="bi bi-x-lg"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>
