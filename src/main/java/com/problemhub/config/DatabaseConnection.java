@@ -21,7 +21,7 @@ public class DatabaseConnection {
     // Default connection properties (fallback)
     private static final String URL = "jdbc:mysql://localhost:3306/problemhub_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8";
     private static final String USER = "root";
-    private static final String PASSWORD = "dkte";
+    private static final String PASSWORD = "31415";
 
     @Autowired
     public DatabaseConnection(DataSource ds) {

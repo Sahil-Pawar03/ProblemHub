@@ -15,22 +15,42 @@
 
         <div class="collapse navbar-collapse" id="problemHubNavbar">
             <!-- Left Navigation Links -->
+            <!-- Left Navigation Links -->
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 <li class="nav-item" th:if="${session.currentUser == null}">
                     <a class="nav-link nav-link-custom" th:href="@{/}"><i class="bi bi-house me-1"></i> Home</a>
                 </li>
+
+                <!-- Role-Aware Dashboard Link -->
                 <li class="nav-item" th:if="${session.currentUser != null}">
-                    <a class="nav-link nav-link-custom" th:href="@{/dashboard}"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+                    <a class="nav-link nav-link-custom" th:if="${session.currentUser.student}" th:href="@{/dashboard}"><i class="bi bi-speedometer2 me-1"></i> Dashboard</a>
+                    <a class="nav-link nav-link-custom text-success fw-semibold" th:if="${session.currentUser.faculty}" th:href="@{/faculty/dashboard}"><i class="bi bi-person-badge me-1"></i> Faculty Portal</a>
+                    <a class="nav-link nav-link-custom text-warning fw-semibold" th:if="${session.currentUser.organization}" th:href="@{/org/dashboard}"><i class="bi bi-building me-1"></i> Org Portal</a>
+                    <a class="nav-link nav-link-custom text-danger fw-semibold" th:if="${session.currentUser.admin}" th:href="@{/admin}"><i class="bi bi-shield-check me-1"></i> Admin Console</a>
                 </li>
+
                 <li class="nav-item">
                     <a class="nav-link nav-link-custom" th:href="@{/problems}"><i class="bi bi-compass me-1"></i> Explore Problems</a>
                 </li>
-                <li class="nav-item" th:if="${session.currentUser != null}">
+
+                <!-- Student specific links -->
+                <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.student}">
                     <a class="nav-link nav-link-custom" th:href="@{/projects/my}"><i class="bi bi-kanban me-1"></i> My Projects</a>
                 </li>
-                <li class="nav-item" th:if="${session.currentUser != null}">
+                <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.student}">
                     <a class="nav-link nav-link-custom" th:href="@{/bookmarks}"><i class="bi bi-bookmark me-1"></i> Bookmarks</a>
                 </li>
+
+                <!-- Faculty specific link -->
+                <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.faculty}">
+                    <a class="nav-link nav-link-custom" th:href="@{/faculty/dashboard}"><i class="bi bi-mortarboard me-1"></i> Student Projects</a>
+                </li>
+
+                <!-- Organization specific link -->
+                <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.organization}">
+                    <a class="nav-link nav-link-custom" th:href="@{/org/dashboard}"><i class="bi bi-list-task me-1"></i> My Challenges</a>
+                </li>
+
                 <li class="nav-item">
                     <a class="nav-link nav-link-custom" th:href="@{/solutions}"><i class="bi bi-collection me-1"></i> Solutions</a>
                 </li>
@@ -39,9 +59,6 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link nav-link-custom" th:href="@{/about}"><i class="bi bi-info-circle me-1"></i> About</a>
-                </li>
-                <li class="nav-item" th:if="${session.currentUser != null and session.currentUser.role == 'ADMIN'}">
-                    <a class="nav-link nav-link-custom text-danger fw-bold" th:href="@{/admin}"><i class="bi bi-shield-check me-1"></i> Admin</a>
                 </li>
             </ul>
 
@@ -65,24 +82,48 @@
 
                     <div class="dropdown">
                         <button class="btn btn-outline-custom btn-sm dropdown-toggle d-flex align-items-center gap-2" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span class="badge bg-primary rounded-circle p-1" style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;">
+                            <span class="badge rounded-circle p-1"
+                                  th:classappend="${session.currentUser.admin ? 'bg-danger' : (session.currentUser.faculty ? 'bg-success' : (session.currentUser.organization ? 'bg-warning text-dark' : 'bg-primary'))}"
+                                  style="width: 22px; height: 22px; display: inline-flex; align-items: center; justify-content: center;">
                                 <i class="bi bi-person-fill" style="font-size: 0.75rem;"></i>
                             </span>
                             <span th:text="${session.currentUser.fullName}" class="d-none d-sm-inline">User</span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow-sm border mt-2">
                             <li class="px-3 py-2 border-bottom">
-                                <div class="fw-bold" th:text="${session.currentUser.fullName}">Student Name</div>
-                                <div class="text-muted small" th:text="${session.currentUser.email}">student@college.edu</div>
-                                <span class="badge bg-light text-dark border mt-1" th:text="${session.currentUser.role}">ROLE</span>
+                                <div class="fw-bold" th:text="${session.currentUser.fullName}">User Name</div>
+                                <div class="text-muted small" th:text="${session.currentUser.email}">user@college.edu</div>
+                                <span class="badge border mt-1"
+                                      th:classappend="${session.currentUser.admin ? 'bg-danger-subtle text-danger border-danger-subtle' : (session.currentUser.faculty ? 'bg-success-subtle text-success border-success-subtle' : (session.currentUser.organization ? 'bg-warning-subtle text-dark border-warning-subtle' : 'bg-primary-subtle text-primary border-primary-subtle'))}"
+                                      th:text="${session.currentUser.role}">ROLE</span>
                             </li>
-                            <li><a class="dropdown-item py-2" th:href="@{/dashboard}"><i class="bi bi-speedometer2 me-2"></i> Dashboard</a></li>
-                            <li><a class="dropdown-item py-2" th:href="@{/projects/my}"><i class="bi bi-folder-check me-2"></i> My Projects</a></li>
-                            <li><a class="dropdown-item py-2" th:href="@{/bookmarks}"><i class="bi bi-bookmark me-2"></i> Bookmarks</a></li>
+                            <!-- Student Links -->
+                            <th:block th:if="${session.currentUser.student}">
+                                <li><a class="dropdown-item py-2" th:href="@{/dashboard}"><i class="bi bi-speedometer2 me-2"></i> Student Dashboard</a></li>
+                                <li><a class="dropdown-item py-2" th:href="@{/projects/my}"><i class="bi bi-folder-check me-2"></i> My Projects</a></li>
+                                <li><a class="dropdown-item py-2" th:href="@{/bookmarks}"><i class="bi bi-bookmark me-2"></i> Bookmarks</a></li>
+                            </th:block>
+
+                            <!-- Faculty Links -->
+                            <th:block th:if="${session.currentUser.faculty}">
+                                <li><a class="dropdown-item py-2" th:href="@{/faculty/dashboard}"><i class="bi bi-person-badge me-2"></i> Faculty Guide Portal</a></li>
+                                <li><a class="dropdown-item py-2" th:href="@{/solutions}"><i class="bi bi-star me-2"></i> Review &amp; Rate Solutions</a></li>
+                            </th:block>
+
+                            <!-- Organization Links -->
+                            <th:block th:if="${session.currentUser.organization}">
+                                <li><a class="dropdown-item py-2" th:href="@{/org/dashboard}"><i class="bi bi-building me-2"></i> Organization Portal</a></li>
+                                <li><a class="dropdown-item py-2" th:href="@{/problems/new}"><i class="bi bi-plus-circle me-2"></i> Post New Challenge</a></li>
+                            </th:block>
+
+                            <!-- Admin Links -->
+                            <th:block th:if="${session.currentUser.admin}">
+                                <li><a class="dropdown-item py-2 text-danger fw-semibold" th:href="@{/admin}"><i class="bi bi-shield-lock me-2"></i> Admin Console</a></li>
+                                <li><a class="dropdown-item py-2" th:href="@{/admin/verify-problems}"><i class="bi bi-check2-circle me-2"></i> Verify Problems</a></li>
+                                <li><a class="dropdown-item py-2" th:href="@{/admin/verify-solutions}"><i class="bi bi-patch-check me-2"></i> Verify Solutions</a></li>
+                            </th:block>
+
                             <li><a class="dropdown-item py-2" th:href="@{/profile}"><i class="bi bi-person-gear me-2"></i> Profile Settings</a></li>
-                            <li th:if="${session.currentUser.role == 'ADMIN'}">
-                                <a class="dropdown-item py-2 text-danger" th:href="@{/admin}"><i class="bi bi-shield-lock me-2"></i> Admin Console</a>
-                            </li>
                             <li><hr class="dropdown-divider my-1"></li>
                             <li><a class="dropdown-item py-2 text-danger" th:href="@{/logout}"><i class="bi bi-box-arrow-right me-2"></i> Logout</a></li>
                         </ul>

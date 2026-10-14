@@ -27,12 +27,18 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String showLogin(@RequestParam(value = "redirect", required = false) String redirect,
+    public String showLogin(@RequestParam(value = "role", defaultValue = "STUDENT") String role,
+                            @RequestParam(value = "redirect", required = false) String redirect,
                             @RequestParam(value = "error", required = false) String error,
                             Model model, HttpSession session) {
         if (session.getAttribute("currentUser") != null) {
+            User currentUser = (User) session.getAttribute("currentUser");
+            if (currentUser.isAdmin()) return "redirect:/admin";
+            if (currentUser.isFaculty()) return "redirect:/faculty/dashboard";
+            if (currentUser.isOrganization()) return "redirect:/org/dashboard";
             return "redirect:/dashboard";
         }
+        model.addAttribute("selectedRole", role != null ? role.toUpperCase() : "STUDENT");
         model.addAttribute("redirect", redirect);
         if (error != null) {
             model.addAttribute("errorMessage", "Invalid email or password. Please try again.");
@@ -43,6 +49,7 @@ public class AuthController {
     @PostMapping("/process-login")
     public String processLogin(@RequestParam("email") String email,
                                @RequestParam("password") String password,
+                               @RequestParam(value = "role", required = false) String selectedRole,
                                @RequestParam(value = "redirect", required = false) String redirect,
                                HttpSession session,
                                RedirectAttributes redirectAttributes) {
@@ -50,9 +57,21 @@ public class AuthController {
 
         if (userOpt.isPresent()) {
             User user = userOpt.get();
+
+            // Validate selected role against actual user role
+            if (selectedRole != null && !selectedRole.trim().isEmpty() && !"ANY".equalsIgnoreCase(selectedRole)) {
+                if (!user.getRole().equalsIgnoreCase(selectedRole.trim())) {
+                    redirectAttributes.addFlashAttribute("errorMessage",
+                            "Role Mismatch: Your account is registered as " + user.getRole() +
+                            ", but you selected " + selectedRole.toUpperCase() +
+                            ". Please select the " + user.getRole() + " role tab to sign in.");
+                    return "redirect:/login?role=" + user.getRole() + (redirect != null ? "&redirect=" + redirect : "");
+                }
+            }
+
             session.setAttribute("currentUser", user);
             session.setAttribute("userRole", user.getRole());
-            redirectAttributes.addFlashAttribute("successMessage", "Welcome back, " + user.getFullName() + "!");
+            redirectAttributes.addFlashAttribute("successMessage", "Welcome back, " + user.getFullName() + " (" + user.getRole() + ")!");
 
             if (redirect != null && !redirect.trim().isEmpty() && !redirect.contains("/login")) {
                 return "redirect:" + redirect;
@@ -60,10 +79,16 @@ public class AuthController {
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
                 return "redirect:/admin";
             }
+            if ("FACULTY".equalsIgnoreCase(user.getRole())) {
+                return "redirect:/faculty/dashboard";
+            }
+            if ("ORGANIZATION".equalsIgnoreCase(user.getRole())) {
+                return "redirect:/org/dashboard";
+            }
             return "redirect:/dashboard";
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Invalid credentials. Try demo credentials provided below.");
-            return "redirect:/login" + (redirect != null ? "?redirect=" + redirect : "");
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid credentials. Please verify your email and password, or use the 1-click viva demo login below.");
+            return "redirect:/login" + (selectedRole != null ? "?role=" + selectedRole : "") + (redirect != null ? "&redirect=" + redirect : "");
         }
     }
 
@@ -162,6 +187,12 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("successMessage", "Demo session started as " + user.getFullName() + " (" + user.getRole() + ")");
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
                 return "redirect:/admin";
+            }
+            if ("FACULTY".equalsIgnoreCase(user.getRole())) {
+                return "redirect:/faculty/dashboard";
+            }
+            if ("ORGANIZATION".equalsIgnoreCase(user.getRole())) {
+                return "redirect:/org/dashboard";
             }
             return "redirect:/dashboard";
         }

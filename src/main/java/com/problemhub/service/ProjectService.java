@@ -56,4 +56,8 @@ public class ProjectService {
     public int getStudentCompletedCount(int studentUserId) {
         return projectDAO.countCompletedByStudentId(studentUserId);
     }
+
+    public boolean updateFacultyReview(int id, String status, String feedback) {
+        return projectDAO.updateFacultyReview(id, status, feedback);
+    }
 }

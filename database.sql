@@ -148,6 +148,7 @@ CREATE TABLE projects (
     completion_date DATE,
     repo_url VARCHAR(255),
     documentation_url VARCHAR(255),
+    faculty_feedback TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (problem_id) REFERENCES problems(id) ON DELETE CASCADE,

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('Page Not Found - ProblemHub')}"></head>
+<body class="bg-light">
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container text-center py-5" style="max-width: 600px;">
+            <div class="card-custom p-5 bg-white shadow-sm border">
+                <div class="display-1 fw-bold text-primary mb-3">404</div>
+                <h3 class="fw-bold text-navy mb-2">Statement or Page Not Found</h3>
+                <p class="text-muted-custom mb-4">
+                    The problem statement, project, or resource you are looking for does not exist or may have been moved.
+                </p>
+
+                <div class="d-flex justify-content-center gap-2">
+                    <a th:href="@{/problems}" class="btn btn-primary-custom px-4 py-2">
+                        <i class="bi bi-compass me-1"></i> Explore Problems
+                    </a>
+                    <a th:href="@{/}" class="btn btn-outline-secondary px-4 py-2">
+                        <i class="bi bi-house me-1"></i> Home
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

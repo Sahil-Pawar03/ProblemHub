@@ -52,7 +52,7 @@ public class RecommendationService {
             List<String> matchedTechList = new ArrayList<>();
             List<String> reasonParts = new ArrayList<>();
 
-            // 1. Technology / Skills match (+30 points)
+            // 1. Skill Overlap (Content-Based Filtering: up to 40%)
             String probTechStr = (problem.getSuggestedTech() != null ? problem.getSuggestedTech() : "") + " " +
                                  (problem.getRequiredSkills() != null ? problem.getRequiredSkills() : "");
             Set<String> probTechTokens = extractTokens(probTechStr);
@@ -66,61 +66,57 @@ public class RecommendationService {
                 }
             }
 
-            if (!matchedTechList.isEmpty()) {
-                score += 30;
-                reasonParts.add("matches your " + String.join(", ", new HashSet<>(matchedTechList)) + " skills (+30)");
+            int distinctMatches = new HashSet<>(matchedTechList).size();
+            if (distinctMatches >= 2) {
+                score += 40;
+                reasonParts.add("strong match for your " + String.join(", ", new HashSet<>(matchedTechList)) + " skills (40%)");
+            } else if (distinctMatches == 1) {
+                score += 25;
+                reasonParts.add("matches your " + matchedTechList.get(0) + " skills (25%)");
             }
 
-            // 2. Domain match (+25 points)
+            // 2. Domain Affinity (Content-Based Filtering: up to 30%)
             boolean domainMatched = false;
             if (problem.getDomain() != null) {
                 String probDomain = problem.getDomain().toLowerCase();
                 for (String interest : userInterests) {
                     if (probDomain.contains(interest) || interest.contains(probDomain)) {
                         domainMatched = true;
-                        score += 25;
-                        reasonParts.add("aligns with your interest in " + problem.getDomain() + " (+25)");
+                        score += 30;
+                        reasonParts.add("aligns with your domain interest in " + problem.getDomain() + " (30%)");
                         break;
                     }
                 }
             }
 
-            // 3. Difficulty match (+20 points)
-            // 3rd year students ideal for Intermediate, 4th year for Advanced, 1st/2nd for Beginner
+            // 3. Academic Level & Difficulty Fit (up to 20%)
             String difficulty = problem.getDifficulty() != null ? problem.getDifficulty() : "";
             if (userYear.contains("3rd") && "Intermediate".equalsIgnoreCase(difficulty)) {
                 score += 20;
-                reasonParts.add("appropriate intermediate difficulty for 3rd year (+20)");
+                reasonParts.add("tailored intermediate difficulty for 3rd year (20%)");
             } else if (userYear.contains("4th") && "Advanced".equalsIgnoreCase(difficulty)) {
                 score += 20;
-                reasonParts.add("advanced challenge suited for final year (+20)");
+                reasonParts.add("advanced scope suited for final year capstone (20%)");
             } else if ((userYear.contains("1st") || userYear.contains("2nd")) && "Beginner".equalsIgnoreCase(difficulty)) {
                 score += 20;
-                reasonParts.add("beginner-friendly scope (+20)");
+                reasonParts.add("beginner-friendly scope (20%)");
             } else if ("Intermediate".equalsIgnoreCase(difficulty)) {
-                // General baseline
-                score += 10;
-            }
-
-            // 4. Duration match (+15 points)
-            if ("1 Month".equalsIgnoreCase(problem.getDuration()) || "2–3 Months".equalsIgnoreCase(problem.getDuration())) {
                 score += 15;
+            } else {
+                score += 10;
             }
 
-            // 5. Project type match (+10 points)
-            if ("Mini Project".equalsIgnoreCase(problem.getProjectType()) && userYear.contains("3rd")) {
+            // 4. Semester Project Duration Feasibility (up to 10%)
+            if ("1 Month".equalsIgnoreCase(problem.getDuration()) || "2–3 Months".equalsIgnoreCase(problem.getDuration())) {
                 score += 10;
-                reasonParts.add("ideal for semester mini-project (+10)");
-            } else if ("Major Project".equalsIgnoreCase(problem.getProjectType()) && userYear.contains("4th")) {
-                score += 10;
-                reasonParts.add("ideal for capstone major project (+10)");
-            } else if (problem.getProjectType() != null) {
+                reasonParts.add("ideal semester timeframe (10%)");
+            } else {
                 score += 5;
             }
 
-            // Only recommend if there is a meaningful match score
-            if (score >= 30) {
-                String explanation = "Recommended because it " + (reasonParts.isEmpty() ? "is highly trending" : String.join(", and ", reasonParts)) + ".";
+            // Only recommend if there is a meaningful match (score >= 35%)
+            if (score >= 35) {
+                String explanation = "Recommended because it " + (reasonParts.isEmpty() ? "aligns with your academic profile" : String.join(", and ", reasonParts)) + ".";
                 RecommendationDTO dto = new RecommendationDTO(problem, score, explanation);
                 dto.setMatchedSkills(new ArrayList<>(new HashSet<>(matchedTechList)));
                 dto.setDomainMatched(domainMatched);

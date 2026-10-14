@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/header :: header('RESTful API Documentation - ProblemHub')}"></head>
+<body class="bg-light">
+
+    <!-- Main Navigation Bar -->
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="py-5">
+        <div class="container" style="max-width: 960px;">
+            <div class="text-center mb-5">
+                <span class="badge bg-primary-subtle text-primary px-3 py-2 fs-6 mb-2">
+                    <i class="bi bi-braces me-1"></i> RESTful Services
+                </span>
+                <h1 class="fw-bold text-navy mb-2">ProblemHub API Documentation</h1>
+                <p class="text-muted-custom">
+                    JSON API endpoints designed for cross-platform clients, mobile applications, and external academic integrations.
+                </p>
+            </div>
+
+            <!-- API Endpoints List -->
+            <div class="row g-4">
+                <!-- Endpoint 1: Problems List -->
+                <div class="col-12">
+                    <div class="card-custom bg-white p-4 shadow-sm border">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-success px-2 py-1">GET</span>
+                                <code class="fs-6 text-dark fw-bold">/api/v1/problems</code>
+                            </div>
+                            <a th:href="@{/api/v1/problems}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Test Endpoint
+                            </a>
+                        </div>
+                        <p class="text-muted-custom small mb-3">
+                            Retrieves list of all approved problem statements. Supports optional query parameters: <code>keyword</code>, <code>domain</code>, and <code>difficulty</code>.
+                        </p>
+                        <div class="bg-light p-3 rounded border">
+                            <span class="small fw-semibold text-muted d-block mb-1">Example Response:</span>
+                            <pre class="mb-0 small text-navy" style="max-height: 140px; overflow-y: auto;">{
+  "success": true,
+  "message": "Retrieved 12 problem statements",
+  "data": [
+    {
+      "id": 1,
+      "title": "Smart Waste Collection Route Optimization",
+      "domain": "Environment",
+      "difficulty": "Intermediate",
+      "suggestedTech": "Java, MySQL, Leaflet"
+    }
+  ],
+  "timestamp": 1728954000000
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Endpoint 2: Problem Details -->
+                <div class="col-12">
+                    <div class="card-custom bg-white p-4 shadow-sm border">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-success px-2 py-1">GET</span>
+                                <code class="fs-6 text-dark fw-bold">/api/v1/problems/{id}</code>
+                            </div>
+                            <a th:href="@{/api/v1/problems/1}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Test ID #1
+                            </a>
+                        </div>
+                        <p class="text-muted-custom small mb-3">
+                            Retrieves single problem statement by ID including context, required skills, deliverables, and duration.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Endpoint 3: Content-Based Recommendations -->
+                <div class="col-12">
+                    <div class="card-custom bg-white p-4 shadow-sm border">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-success px-2 py-1">GET</span>
+                                <code class="fs-6 text-dark fw-bold">/api/v1/recommendations</code>
+                            </div>
+                            <a th:href="@{/api/v1/recommendations(skills='Java, MySQL, AI', interests='Healthcare, Environment')}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Test Recommendations
+                            </a>
+                        </div>
+                        <p class="text-muted-custom small mb-3">
+                            Executes the Content-Based Filtering algorithm against current student profile or query parameters (<code>skills</code>, <code>interests</code>, <code>year</code>) and returns ranked matches with percentage score.
+                        </p>
+                        <div class="bg-light p-3 rounded border">
+                            <span class="small fw-semibold text-muted d-block mb-1">Response Data Features:</span>
+                            <code class="small text-primary">score</code>, <code class="small text-primary">matchPercentage</code>, <code class="small text-primary">matchedSkills</code>, <code class="small text-primary">domainMatched</code>, <code class="small text-primary">explanation</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Endpoint 4: Platform Summary Stats -->
+                <div class="col-12">
+                    <div class="card-custom bg-white p-4 shadow-sm border">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
+                            <div class="d-flex align-items-center gap-2">
+                                <span class="badge bg-success px-2 py-1">GET</span>
+                                <code class="fs-6 text-dark fw-bold">/api/v1/stats</code>
+                            </div>
+                            <a th:href="@{/api/v1/stats}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> Test Stats
+                            </a>
+                        </div>
+                        <p class="text-muted-custom small mb-0">
+                            Summary platform counts (total problems, registered student projects, verified solutions, active batches).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Viva Quick Link Reference -->
+            <div class="card-custom p-4 bg-white border border-primary-subtle mt-4 text-center">
+                <h6 class="fw-bold text-navy mb-1"><i class="bi bi-check-circle-fill text-success me-1"></i> Viva Presentation Tip</h6>
+                <p class="text-muted-custom small mb-0">
+                    You can show examiners live JSON outputs by clicking any <strong>"Test Endpoint"</strong> button above, proving real-world client-server decoupled architecture.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Fragment -->
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

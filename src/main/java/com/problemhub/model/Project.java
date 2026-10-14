@@ -20,6 +20,7 @@ public class Project {
     private Date completionDate;
     private String repoUrl;
     private String documentationUrl;
+    private String facultyFeedback;
     private Timestamp createdAt;
     private Timestamp updatedAt;
 
@@ -71,6 +72,9 @@ public class Project {
 
     public String getDocumentationUrl() { return documentationUrl; }
     public void setDocumentationUrl(String documentationUrl) { this.documentationUrl = documentationUrl; }
+
+    public String getFacultyFeedback() { return facultyFeedback; }
+    public void setFacultyFeedback(String facultyFeedback) { this.facultyFeedback = facultyFeedback; }
 
     public Timestamp getCreatedAt() { return createdAt; }
     public void setCreatedAt(Timestamp createdAt) { this.createdAt = createdAt; }

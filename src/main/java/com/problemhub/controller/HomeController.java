@@ -49,4 +49,10 @@ public class HomeController {
         model.addAttribute("pageTitle", "About ProblemHub");
         return "about";
     }
+
+    @GetMapping("/api-docs")
+    public String apiDocs(Model model) {
+        model.addAttribute("pageTitle", "REST API Documentation - ProblemHub");
+        return "api-docs";
+    }
 }

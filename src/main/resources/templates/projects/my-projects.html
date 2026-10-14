@@ -94,6 +94,10 @@
                             <div>
                                 <i class="bi bi-code-slash me-1 text-muted"></i> <strong>Stack:</strong> <span th:text="${project.technologiesUsed}">Java, MySQL, Leaflet</span>
                             </div>
+                        <!-- Guide Remarks -->
+                        <div class="p-2 px-3 bg-success-subtle rounded border border-success-subtle small mb-3 text-dark" th:if="${project.facultyFeedback}">
+                            <i class="bi bi-person-badge-fill text-success me-1"></i> <strong class="small">Guide Remarks:</strong>
+                            <div class="fst-italic" th:text="${project.facultyFeedback}">Approved for semester.</div>
                         </div>
 
                         <!-- Progress Bar -->

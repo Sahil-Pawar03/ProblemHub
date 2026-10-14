@@ -210,6 +210,22 @@ public class ProjectDAO {
         return 0;
     }
 
+    public boolean updateFacultyReview(int id, String status, String facultyFeedback) {
+        String sql = "UPDATE projects SET status = ?, faculty_feedback = ? WHERE id = ?";
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, status);
+            ps.setString(2, facultyFeedback);
+            ps.setInt(3, id);
+
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            System.err.println("Error in ProjectDAO.updateFacultyReview: " + e.getMessage());
+        }
+        return false;
+    }
+
     private Project mapResultSetToProject(ResultSet rs) throws SQLException {
         Project p = new Project();
         p.setId(rs.getInt("id"));
@@ -227,6 +243,10 @@ public class ProjectDAO {
         p.setDocumentationUrl(rs.getString("documentation_url"));
         p.setCreatedAt(rs.getTimestamp("created_at"));
         p.setUpdatedAt(rs.getTimestamp("updated_at"));
+
+        try {
+            p.setFacultyFeedback(rs.getString("faculty_feedback"));
+        } catch (SQLException ignored) {}
 
         try {
             p.setProblemTitle(rs.getString("problem_title"));

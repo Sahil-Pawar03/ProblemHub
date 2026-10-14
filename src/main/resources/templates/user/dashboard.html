@@ -121,7 +121,7 @@
                     <div>
                         <div class="d-flex align-items-center gap-2">
                             <h4 class="fw-bold text-navy mb-0"><i class="bi bi-stars text-primary me-2"></i> Recommended for You</h4>
-                            <span class="badge bg-light text-primary border small">Score-Based Matching</span>
+                            <span class="badge bg-light text-primary border small">Content-Based Filtering</span>
                         </div>
                         <p class="text-muted-custom small mb-0">Matched against your technical skills (<strong th:text="${currentUser.skills}">Java, MySQL</strong>) and interests.</p>
                     </div>
@@ -133,8 +133,8 @@
                         <div class="card-custom recommendation-card h-100 p-4 d-flex flex-column">
                             <div class="d-flex justify-content-between align-items-start mb-2">
                                 <span class="badge-domain" th:text="${rec.problem.domain}">Environment</span>
-                                <span class="badge bg-primary rounded-pill px-3 py-1">
-                                    <i class="bi bi-bullseye me-1"></i> <span th:text="${rec.score + ' Match Pts'}">85 Match Pts</span>
+                                <span class="badge rounded-pill px-3 py-1 text-white" th:classappend="${rec.badgeClass}">
+                                    <i class="bi bi-bullseye me-1"></i> <span th:text="${rec.matchPercentage + '% Match'}">90% Match</span>
                                 </span>
                             </div>
 

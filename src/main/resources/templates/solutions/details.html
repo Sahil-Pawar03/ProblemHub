@@ -222,7 +222,8 @@
                                         <span class="badge bg-light text-dark border small ms-1" th:text="${r.userRole}">FACULTY</span>
                                     </div>
                                     <div class="text-warning">
-                                        <span th:each="star : ${#numbers.sequence(1, r.ratingValue)}">★</span>
+                                        <span th:if="${r.ratingValue != null and r.ratingValue >= 1}" th:each="star : ${#numbers.sequence(1, r.ratingValue)}">★</span>
+                                        <span th:if="${r.ratingValue != null and r.ratingValue < 5}" th:each="emptyStar : ${#numbers.sequence(1, 5 - r.ratingValue)}" class="text-muted opacity-25">★</span>
                                     </div>
                                 </div>
                                 <p class="text-muted-custom small mb-1" th:text="${r.reviewComment}">

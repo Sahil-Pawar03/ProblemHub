@@ -1,0 +1,38 @@
+services:
+  mysqldb:
+    image: mysql:8.0
+    container_name: problemhub-mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: problemhub_db
+      MYSQL_USER: problemhub
+      MYSQL_PASSWORD: problemhub123
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./database.sql:/docker-entrypoint-initdb.d/01-init.sql
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build: .
+    container_name: problemhub-app
+    restart: always
+    depends_on:
+      mysqldb:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      PORT: 8080
+      DB_URL: jdbc:mysql://mysqldb:3306/problemhub_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&characterEncoding=UTF-8
+      DB_USERNAME: root
+      DB_PASSWORD: root
+
+volumes:
+  mysql_data:

@@ -15,10 +15,12 @@ import java.util.Optional;
 public class AuthService {
 
     private final UserDAO userDAO;
+    private final com.problemhub.dao.OrganizationDAO organizationDAO;
 
     @Autowired
-    public AuthService(UserDAO userDAO) {
+    public AuthService(UserDAO userDAO, com.problemhub.dao.OrganizationDAO organizationDAO) {
         this.userDAO = userDAO;
+        this.organizationDAO = organizationDAO;
     }
 
     public Optional<User> authenticate(String email, String rawPassword) {
@@ -51,7 +53,21 @@ public class AuthService {
         user.setPasswordHash(hashedPassword);
 
         int newId = userDAO.createUser(user);
-        return newId > 0;
+        if (newId > 0) {
+            user.setId(newId);
+            if (user.isOrganization()) {
+                com.problemhub.model.Organization org = new com.problemhub.model.Organization();
+                org.setUserId(newId);
+                org.setOrgName(user.getFullName());
+                org.setOrgType("Industry");
+                org.setContactEmail(user.getEmail());
+                org.setDescription(user.getBio() != null ? user.getBio() : user.getFullName() + " Industry / NGO Partner");
+                org.setVerified(true);
+                organizationDAO.createOrganization(org);
+            }
+            return true;
+        }
+        return false;
     }
 
     public boolean isEmailAvailable(String email) {
