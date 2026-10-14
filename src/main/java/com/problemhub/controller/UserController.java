@@ -78,6 +78,8 @@ public class UserController {
                 model.addAttribute("errorMessage", "Access Denied: Faculty Guide privileges required.");
             } else if ("unauthorized_org".equals(error)) {
                 model.addAttribute("errorMessage", "Access Denied: Organization privileges required.");
+            } else if ("unauthorized_student_only".equals(error)) {
+                model.addAttribute("errorMessage", "Access Denied: That action is reserved for student accounts.");
             } else {
                 model.addAttribute("errorMessage", "You are not authorized to access that section.");
             }

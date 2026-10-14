@@ -2,7 +2,7 @@ package com.problemhub.model;
 
 /**
  * Standard REST API response wrapper for JSON endpoints.
- * Easily explainable in 5th-sem viva: standardizes JSON responses across all endpoints.
+ * Standardizes API responses across all platform endpoints.
  */
 public class ApiResponse<T> {
     private boolean success;

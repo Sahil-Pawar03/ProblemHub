@@ -73,6 +73,10 @@ public class ProjectController {
         if (currentUser == null) {
             return "redirect:/login?redirect=/projects/start/" + problemId;
         }
+        if (!currentUser.isStudent() && !currentUser.isAdmin()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Access Denied: Only students can initiate and propose projects.");
+            return "redirect:/problems/" + problemId;
+        }
 
         Optional<Problem> problemOpt = problemService.getProblemDetails(problemId, currentUser.getId());
         if (problemOpt.isEmpty()) {
@@ -88,7 +92,7 @@ public class ProjectController {
         project.setTeamMembers(currentUser.getFullName());
         project.setStudentUserId(currentUser.getId());
         project.setProgressPercent(10);
-        project.setStatus("IN_PROGRESS");
+        project.setStatus("PROPOSED");
         project.setStartDate(new Date(System.currentTimeMillis()));
 
         model.addAttribute("problem", problem);
@@ -104,16 +108,24 @@ public class ProjectController {
         if (currentUser == null) {
             return "redirect:/login";
         }
+        if (!currentUser.isStudent() && !currentUser.isAdmin()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Access Denied: Only students can register project proposals.");
+            return "redirect:/problems";
+        }
 
         project.setStudentUserId(currentUser.getId());
+        project.setStatus("PROPOSED"); // Awaits faculty guide review & approval
+        if (project.getProgressPercent() <= 0) {
+            project.setProgressPercent(10);
+        }
         if (project.getStartDate() == null) {
             project.setStartDate(new Date(System.currentTimeMillis()));
         }
 
         int newId = projectService.startProject(project);
         if (newId > 0) {
-            redirectAttributes.addFlashAttribute("successMessage", "Project initiated successfully! You can track and update your progress here.");
-            return "redirect:/projects/my";
+            redirectAttributes.addFlashAttribute("successMessage", "Project proposal submitted successfully! Your faculty mentor will review and approve it.");
+            return "redirect:/projects/my?tab=PROPOSED";
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to initialize project. Please try again.");
             return "redirect:/problems/" + project.getProblemId();
@@ -142,7 +154,26 @@ public class ProjectController {
                                  @RequestParam("status") String status,
                                  @RequestParam(value = "repoUrl", required = false) String repoUrl,
                                  @RequestParam(value = "documentationUrl", required = false) String documentationUrl,
+                                 HttpSession session,
                                  RedirectAttributes redirectAttributes) {
+
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        Optional<Project> projOpt = projectService.getProjectById(id);
+        if (projOpt.isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Project not found.");
+            return "redirect:/projects/my";
+        }
+
+        Project project = projOpt.get();
+        // IDOR Ownership verification: Only the project owner, faculty guide, or admin can update progress
+        if (project.getStudentUserId() != currentUser.getId() && !currentUser.isFaculty() && !currentUser.isAdmin()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Access Denied: You can only update your own team's project.");
+            return "redirect:/projects/my";
+        }
 
         boolean success = projectService.updateProgress(id, progressPercent, status, repoUrl, documentationUrl);
         if (success) {

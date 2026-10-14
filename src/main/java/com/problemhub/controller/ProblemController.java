@@ -44,11 +44,16 @@ public class ProblemController {
                           @RequestParam(value = "difficulty", required = false) String difficulty,
                           @RequestParam(value = "duration", required = false) String duration,
                           @RequestParam(value = "type", required = false) String projectType,
+                          @RequestParam(value = "error", required = false) String error,
                           HttpSession session,
                           Model model) {
 
         User currentUser = (User) session.getAttribute("currentUser");
         Integer currentUserId = (currentUser != null) ? currentUser.getId() : null;
+
+        if ("unauthorized_post_problem".equals(error)) {
+            model.addAttribute("errorMessage", "Access Denied: Problem statements are submitted by Partner Organizations and Faculty Mentors. Students can explore challenges and register project proposals.");
+        }
 
         List<Problem> problems = problemService.searchProblems(
                 query, domain, tech, difficulty, duration, projectType, "APPROVED", currentUserId
@@ -88,13 +93,26 @@ public class ProblemController {
     }
 
     @GetMapping("/new")
-    public String showPostForm(Model model, HttpSession session) {
+    public String showPostForm(Model model, HttpSession session, RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null) {
+            return "redirect:/login?redirect=/problems/new";
+        }
+        if (currentUser.isStudent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Access Denied: Problem statements are submitted by Partner Organizations and Faculty Mentors. Students can explore challenges and register project proposals.");
+            return "redirect:/problems";
+        }
+
         Problem p = new Problem();
-        if (currentUser != null && currentUser.isOrganization()) {
+        if (currentUser.isOrganization()) {
             p.setOrganizationName(currentUser.getFullName());
             p.setContactInfo(currentUser.getEmail());
             p.setSourceType("Industry");
+        } else if (currentUser.isFaculty()) {
+            p.setOrganizationName(currentUser.getCollege() != null ? currentUser.getCollege() : "Academic Institution");
+            p.setContactInfo(currentUser.getEmail());
+            p.setSourceType("Academic");
         }
         model.addAttribute("problem", p);
         return "problems/post";
@@ -105,16 +123,20 @@ public class ProblemController {
                               HttpSession session,
                               RedirectAttributes redirectAttributes) {
         User currentUser = (User) session.getAttribute("currentUser");
-        if (currentUser != null) {
-            problem.setCreatedByUserId(currentUser.getId());
-            // If posted by admin or faculty, auto-approve; otherwise set to PENDING for review
-            if (currentUser.isAdmin() || currentUser.isFaculty()) {
-                problem.setStatus("APPROVED");
-                problem.setVerified(true);
-            } else {
-                problem.setStatus("PENDING");
-                problem.setVerified(false);
-            }
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+        if (currentUser.isStudent()) {
+            redirectAttributes.addFlashAttribute("errorMessage",
+                    "Access Denied: Problem statements are submitted by Partner Organizations and Faculty Mentors. Students can explore challenges and register project proposals.");
+            return "redirect:/problems";
+        }
+
+        problem.setCreatedByUserId(currentUser.getId());
+        // If posted by admin or faculty, auto-approve; otherwise set to PENDING for review
+        if (currentUser.isAdmin() || currentUser.isFaculty()) {
+            problem.setStatus("APPROVED");
+            problem.setVerified(true);
         } else {
             problem.setStatus("PENDING");
             problem.setVerified(false);

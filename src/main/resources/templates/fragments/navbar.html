@@ -76,7 +76,12 @@
 
                 <!-- If Logged In -->
                 <th:block th:if="${session.currentUser != null}">
-                    <a th:href="@{/problems/new}" class="btn btn-primary-custom btn-sm d-none d-md-inline-flex align-items-center gap-1">
+                    <!-- Students see My Projects (Students do not post problem statements) -->
+                    <a th:if="${session.currentUser.student}" th:href="@{/projects/my}" class="btn btn-outline-custom btn-sm d-none d-md-inline-flex align-items-center gap-1">
+                        <i class="bi bi-kanban"></i> My Projects
+                    </a>
+                    <!-- Organizations, Faculty, and Admin see Post Problem -->
+                    <a th:if="${!session.currentUser.student}" th:href="@{/problems/new}" class="btn btn-primary-custom btn-sm d-none d-md-inline-flex align-items-center gap-1">
                         <i class="bi bi-plus-circle"></i> Post Problem
                     </a>
 

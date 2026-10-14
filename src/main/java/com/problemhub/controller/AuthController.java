@@ -14,7 +14,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.Optional;
 
 /**
- * Controller for user authentication: login, registration, logout, and viva demo switcher.
+ * Controller for user authentication: login, registration, logout, and stakeholder portal switching.
  */
 @Controller
 public class AuthController {
@@ -87,7 +87,7 @@ public class AuthController {
             }
             return "redirect:/dashboard";
         } else {
-            redirectAttributes.addFlashAttribute("errorMessage", "Invalid credentials. Please verify your email and password, or use the 1-click viva demo login below.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid credentials. Please verify your email and password.");
             return "redirect:/login" + (selectedRole != null ? "?role=" + selectedRole : "") + (redirect != null ? "&redirect=" + redirect : "");
         }
     }
@@ -156,8 +156,8 @@ public class AuthController {
     }
 
     /**
-     * Viva Demo Quick-Switcher:
-     * Allows examiners/presenters to instantly log in as predefined demo roles with a single click.
+     * Demo Role Switcher:
+     * Allows testers to switch between predefined stakeholder roles with preconfigured test accounts.
      */
     @GetMapping("/demo-login")
     public String demoLogin(@RequestParam("role") String role, HttpSession session, RedirectAttributes redirectAttributes) {

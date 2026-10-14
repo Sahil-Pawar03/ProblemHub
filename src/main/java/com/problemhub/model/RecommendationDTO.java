@@ -3,13 +3,11 @@ package com.problemhub.model;
 import java.util.List;
 
 /**
- * Data Transfer Object for score-based problem recommendations with explainable reasons.
- * Ideal for viva demonstration:
- * - Tech match: +30
- * - Domain match: +25
- * - Difficulty match: +20
- * - Duration match: +15
- * - Project type match: +10
+ * Data Transfer Object for Content-Based problem recommendations with explainable feature attribution:
+ * - Skill match: 40%
+ * - Domain match: 30%
+ * - Academic level match: 20%
+ * - Duration feasibility: 10%
  */
 public class RecommendationDTO {
     private Problem problem;

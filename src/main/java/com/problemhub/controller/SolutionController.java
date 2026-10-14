@@ -104,6 +104,10 @@ public class SolutionController {
         if (currentUser == null) {
             return "redirect:/login";
         }
+        if (!currentUser.isStudent() && !currentUser.isAdmin()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Access Denied: Solution submissions are reserved for student project teams.");
+            return "redirect:/solutions";
+        }
 
         Solution solution = new Solution();
         solution.setCollege(currentUser.getCollege() != null ? currentUser.getCollege() : "DKTE Society Textile & Engineering Institute");
@@ -114,13 +118,15 @@ public class SolutionController {
             Optional<Project> projOpt = projectService.getProjectById(projectId);
             if (projOpt.isPresent()) {
                 Project p = projOpt.get();
-                solution.setProjectId(p.getId());
-                solution.setProblemId(p.getProblemId());
-                solution.setTitle(p.getTitle());
-                solution.setTechnologies(p.getTechnologiesUsed());
-                solution.setTeamNames(p.getTeamMembers());
-                solution.setGithubUrl(p.getRepoUrl());
-                solution.setDocumentationUrl(p.getDocumentationUrl());
+                if (p.getStudentUserId() == currentUser.getId() || currentUser.isAdmin()) {
+                    solution.setProjectId(p.getId());
+                    solution.setProblemId(p.getProblemId());
+                    solution.setTitle(p.getTitle());
+                    solution.setTechnologies(p.getTechnologiesUsed());
+                    solution.setTeamNames(p.getTeamMembers());
+                    solution.setGithubUrl(p.getRepoUrl());
+                    solution.setDocumentationUrl(p.getDocumentationUrl());
+                }
             }
         } else if (problemId != null) {
             solution.setProblemId(problemId);
@@ -146,6 +152,19 @@ public class SolutionController {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/login";
+        }
+        if (!currentUser.isStudent() && !currentUser.isAdmin()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Access Denied: Solution submissions are reserved for student project teams.");
+            return "redirect:/solutions";
+        }
+
+        // Ownership check if linking to an existing student project
+        if (solution.getProjectId() != null) {
+            Optional<Project> projOpt = projectService.getProjectById(solution.getProjectId());
+            if (projOpt.isEmpty() || (projOpt.get().getStudentUserId() != currentUser.getId() && !currentUser.isAdmin())) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Authorization Error: You can only submit solutions for your own student project.");
+                return "redirect:/projects/my";
+            }
         }
 
         solution.setSubmittedByUserId(currentUser.getId());
@@ -189,6 +208,16 @@ public class SolutionController {
         User currentUser = (User) session.getAttribute("currentUser");
         if (currentUser == null) {
             return "redirect:/login";
+        }
+
+        // Prevent self-rating: authors cannot rate their own solutions
+        Optional<Solution> solOpt = solutionService.getSolutionById(id);
+        if (solOpt.isPresent()) {
+            Solution sol = solOpt.get();
+            if (sol.getSubmittedByUserId() != null && sol.getSubmittedByUserId().equals(currentUser.getId())) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Integrity Notice: You cannot rate or review your own submitted solution.");
+                return "redirect:/solutions/" + id;
+            }
         }
 
         if (ratingValue < 1 || ratingValue > 5) {

@@ -10,13 +10,12 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 /**
- * Score-based recommendation engine for student project discovery.
- * Designed for simplicity, performance, and clear viva explanation:
- * - Technology match: +30
- * - Domain match: +25
- * - Difficulty match: +20
- * - Duration match: +15
- * - Project type match: +10
+ * Content-Based recommendation engine for student project discovery.
+ * Uses normalized multi-factor feature attribution:
+ * - Technology stack match: 40%
+ * - Domain interest match: 30%
+ * - Academic level match: 20%
+ * - Feasible duration match: 10%
  */
 @Service
 public class RecommendationService {

@@ -69,6 +69,24 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        // 4. Problem Posting routes: Reserved for Organizations, Faculty Guides, and Admins (Students cannot post problems)
+        if ((uri.equals("/problems/new") || uri.equals("/problems/post")) && currentUser.isStudent()) {
+            response.sendRedirect("/problems?error=unauthorized_post_problem");
+            return false;
+        }
+
+        // 5. Student Project Proposal routes: Reserved for Students and Admins
+        if ((uri.startsWith("/projects/start") || uri.equals("/projects/save")) && !currentUser.isStudent() && !currentUser.isAdmin()) {
+            response.sendRedirect("/dashboard?error=unauthorized_student_only");
+            return false;
+        }
+
+        // 6. Solution Submission routes: Reserved for Students and Admins
+        if ((uri.equals("/solutions/new") || uri.equals("/solutions/submit")) && !currentUser.isStudent() && !currentUser.isAdmin()) {
+            response.sendRedirect("/solutions?error=unauthorized_student_only");
+            return false;
+        }
+
         return true;
     }
 }
