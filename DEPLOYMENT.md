@@ -1,4 +1,4 @@
-# ProblemHub Deployment & Viva Presentation Guide
+# ProblemHub Deployment & Hosting Guide
 
 ---
 
@@ -15,15 +15,15 @@
 
 ---
 
-## 2. Recommended Presentation Setup: Localhost (`localhost:8080`)
+## 2. Recommended Demonstration Setup: Localhost (`localhost:8080`)
 
 > [!IMPORTANT]
-> **Why Indian University Viva Evaluators Prefer Localhost:**
-> 1. **Zero Wi-Fi Dependency**: College Wi-Fi networks often have captive portals, blocked ports, or high latency during lab sessions. Running locally ensures your demo never crashes due to internet dropouts.
-> 2. **Verification of Authenticity**: External examiners specifically ask students to:
->    - Show the running terminal / console logs to verify that you compiled and launched the server.
->    - Open MySQL CLI or MySQL Workbench to prove live database queries execute and state persists.
-> 3. **Instant Response Time**: Zero cold starts or latency delays during your viva.
+> **Why Localhost is Ideal for Academic Demonstrations:**
+> 1. **Zero Network Dependency**: Campus Wi-Fi networks often suffer from captive portals, blocked ports, or packet loss during evaluation sessions. Running locally ensures your demonstration is 100% reliable.
+> 2. **Technical Transparency**: Demonstrating locally allows you to:
+>    - Show the running terminal / console logs to verify that the server compiled and started cleanly.
+>    - Inspect MySQL directly via CLI or GUI to demonstrate schema integrity and live state persistence.
+> 3. **Instant Response Time**: Zero cold starts or cloud latency delays during live feature walkthroughs.
 
 ### How to Run Locally for Presentation:
 1. **Ensure MySQL is running:**
@@ -84,15 +84,15 @@ This automatically spins up:
 
 ---
 
-## 5. Viva Presentation Demo Credentials
+## 5. Platform Role Demo Credentials
 
-Use these 1-click credentials to switch roles seamlessly in front of the examiner:
+Use these pre-configured credentials to demonstrate multi-role capabilities:
 
-| Role | Email | Password | Viva Demonstration Purpose |
+| Role | Email | Password | Primary Workflow |
 | :--- | :--- | :--- | :--- |
-| **Student** | `rahul.student@problemhub.com` | `password123` | Demonstrates Content-Based Recommendations, project submission, and tracking. |
-| **Faculty Guide** | `prof.sharma@problemhub.com` | `password123` | Demonstrates faculty review, milestone grading, and approval workflow. |
-| **Industry NGO** | `contact@cleanearthngo.org` | `password123` | Demonstrates posting real-world challenges and reviewing past solutions. |
-| **Admin** | `admin@problemhub.com` | `password123` | Demonstrates administrative control, challenge approvals, and analytics. |
+| **Student** | `rahul.student@problemhub.com` | `password123` | Content-Based Recommendations, project proposal, milestone tracking |
+| **Faculty Guide** | `prof.sharma@problemhub.com` | `password123` | Proposal review, milestone verification, project approval |
+| **Industry NGO** | `contact@cleanearthngo.org` | `password123` | Publishing authentic challenges and reviewing community solutions |
+| **Admin** | `admin@problemhub.com` | `password123` | Platform governance, challenge approvals, system analytics |
 
 *(Quick switch URL: `http://localhost:8080/demo-login?role=STUDENT` / `FACULTY` / `ORGANIZATION` / `ADMIN`)*

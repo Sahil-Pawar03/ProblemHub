@@ -30,14 +30,14 @@ With ProblemHub:
 | **Password Security**| BCrypt | Salted password hashing via `spring-security-crypto` |
 | **Frontend** | HTML5, CSS3, JavaScript | Modern responsive UI, Bootstrap 5.3, Bootstrap Icons |
 | **Templating** | Thymeleaf | Server-side template rendering with reusable fragments |
-| **Data Viz** | Chart.js 4.4 | Interactive analytics charts for viva demonstration |
+| **Data Viz** | Chart.js 4.4 | Interactive domain and project analytics charts |
 | **Build Tool** | Apache Maven 3.9+ | Built-in Maven wrapper (`mvnw.cmd` / `mvnw`) |
 
 ---
 
 ## 🏛️ System Architecture
 
-The project strictly follows a transparent, layered architecture ideal for a college viva explanation:
+The project strictly follows a transparent, 3-tier layered architecture pattern:
 
 ```
 [Browser / User]
@@ -88,7 +88,7 @@ ProblemHub 2/
         │   │   ├── SolutionService.java   # Knowledge base archive & ratings
         │   │   ├── BookmarkService.java   # Bookmark toggling
         │   │   ├── UserService.java       # User profile operations
-        │   │   ├── RecommendationService.java # Viva-friendly matching score algorithm
+        │   │   ├── RecommendationService.java # Content-based skill matching algorithm
         │   │   └── AnalyticsService.java  # Metrics aggregation
         │   ├── dao/
         │   │   ├── UserDAO.java           # JDBC DAO for users
@@ -199,11 +199,11 @@ All pre-seeded demo accounts use the standard password: **`password123`**
 | **Organization** | `contact@cleanearthngo.org` | `password123` | NGO representative posting environmental challenges |
 | **Platform Admin**| `admin@problemhub.com` | `password123` | Administrator moderating problems & solutions |
 
-> 💡 **Viva Presentation Tip**: The login page (`/login`) includes **1-Click Demo Login Buttons** that allow you to instantly switch between Student, Faculty, Organization, and Admin perspectives with a single click during your project demonstration!
+> 💡 **Demo Role Switcher**: The login page (`/login`) includes **Quick Role Switcher Buttons** that allow you to instantly switch between Student, Faculty, Organization, and Admin perspectives with a single click.
 
 ---
 
-## 🎯 Key Features & Viva Talking Points
+## 🎯 Key Features & Technical Highlights
 
 ### 1. Direct JDBC Architecture (No JPA/Hibernate)
 - All database operations are explicitly handled in the DAO layer using `java.sql.PreparedStatement` and `java.sql.ResultSet`.
@@ -211,7 +211,7 @@ All pre-seeded demo accounts use the standard password: **`password123`**
 - Every database resource is wrapped in modern **`try-with-resources`** blocks to prevent connection leaks.
 - Zero concatenated SQL strings ensures 100% security against SQL injection attacks.
 
-### 2. Viva-Friendly Explainable Recommendation Algorithm
+### 2. Explainable Content-Based Recommendation Algorithm
 The platform features an understandable, transparent score-based recommendation engine (`RecommendationService.java`):
 - **Technology Match**: `+30 points` (Matches student skills with required skills/suggested tech).
 - **Domain Match**: `+25 points` (Aligns problem domain with student interests).
@@ -226,7 +226,7 @@ The platform features an understandable, transparent score-based recommendation 
 - Clicking **[Start New Project From This Solution]** immediately registers a new team project linked to the verified problem, preventing repetitive academic duplication.
 
 ### 4. Role-Based Moderation
-- Challenges posted by outside organizations and students undergo review (`PENDING` &rarr; `APPROVED`).
+- Challenges posted by partner organizations or faculty undergo review (`PENDING` &rarr; `APPROVED`).
 - Admin console (`/admin`) allows 1-click approvals and rejections.
 - Star ratings (1–5 stars) and peer reviews allow faculty and seniors to evaluate project quality.
 

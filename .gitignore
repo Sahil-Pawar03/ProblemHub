@@ -35,3 +35,9 @@ out/
 *.log
 .DS_Store
 Thumbs.db
+
+### AI & Agent Caches ###
+.gemini/
+.agent/
+.antigravity/
+*.tmp
