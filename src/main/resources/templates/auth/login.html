@@ -63,7 +63,7 @@
                     <!-- Role Context Explanation Box -->
                     <div class="p-2 px-3 rounded small mb-3 border d-flex align-items-center gap-2" id="roleInfoBox" style="background-color: #f8fafc;">
                         <i class="bi bi-info-circle-fill text-primary" id="roleInfoIcon"></i>
-                        <span class="text-muted" id="roleInfoText">Student Access: Discover problem statements, get AI matching recommendations, and track projects.</span>
+                        <span class="text-muted" id="roleInfoText">Student Access: Browse problem statements, view skill recommendations, and track projects.</span>
                     </div>
 
                     <div class="mb-3">
@@ -118,7 +118,7 @@
                     <h6 class="fw-bold text-navy mb-0">Platform Demo Accounts (Quick Portal Access)</h6>
                 </div>
                 <p class="text-muted-custom small mb-3" style="font-size: 0.8rem;">
-                    Preview ProblemHub across different stakeholder roles with preconfigured test accounts:
+                    Quick test accounts for platform role demonstration:
                 </p>
                 <div class="d-grid gap-2">
                     <a th:href="@{/demo-login(role='STUDENT')}" class="btn btn-light btn-sm text-start border d-flex justify-content-between align-items-center">
@@ -154,10 +154,10 @@
         };
 
         const roleDescriptions = {
-            'STUDENT': 'Student Access: Discover problem statements, get AI matching recommendations, and track projects.',
-            'FACULTY': 'Faculty Guide Access: Mentor capstone student batches, review progress, and evaluate solutions.',
-            'ORGANIZATION': 'Organization Access: Submit real-world industry challenges and review student solution repositories.',
-            'ADMIN': 'Administrator Access: Moderate submitted problems, verify student solutions, and review system analytics.'
+            'STUDENT': 'Student Access: Browse problem statements, view skill recommendations, and track projects.',
+            'FACULTY': 'Faculty Guide Access: Review student project proposals, approve milestones, and verify solutions.',
+            'ORGANIZATION': 'Organization Access: Submit problem statements and view student solutions.',
+            'ADMIN': 'Administrator Access: Manage platform accounts, approve problems, and view system metrics.'
         };
 
         function onRoleChanged(role) {
