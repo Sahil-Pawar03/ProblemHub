@@ -55,16 +55,18 @@
                                 <td class="text-end">
                                     <div class="d-inline-flex gap-1">
                                         <a th:href="@{'/problems/' + ${p.id}}" class="btn btn-outline-secondary btn-sm" title="View Details">
-                                            <i class="bi bi-eye"></i>
+                                            <i class="bi bi-eye"></i> View
                                         </a>
                                         <form th:if="${p.status != 'APPROVED'}" th:action="@{'/admin/problems/' + ${p.id} + '/approve'}" method="post" class="d-inline">
-                                            <button type="submit" class="btn btn-success btn-sm" title="Approve">
-                                                <i class="bi bi-check-lg"></i>
+                                            <input type="hidden" name="redirect" value="/admin/verify-problems">
+                                            <button type="submit" class="btn btn-success btn-sm" title="Accept Problem">
+                                                <i class="bi bi-check-circle-fill me-1"></i> Accept
                                             </button>
                                         </form>
                                         <form th:if="${p.status != 'REJECTED'}" th:action="@{'/admin/problems/' + ${p.id} + '/reject'}" method="post" class="d-inline">
-                                            <button type="submit" class="btn btn-danger btn-sm" title="Reject">
-                                                <i class="bi bi-x-lg"></i>
+                                            <input type="hidden" name="redirect" value="/admin/verify-problems">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm" title="Reject Problem">
+                                                <i class="bi bi-x-circle me-1"></i> Reject
                                             </button>
                                         </form>
                                     </div>

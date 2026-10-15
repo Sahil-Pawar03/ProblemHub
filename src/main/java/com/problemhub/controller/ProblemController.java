@@ -83,6 +83,17 @@ public class ProblemController {
         }
 
         Problem problem = problemOpt.get();
+
+        // If problem is not approved, only the author or an administrator should see it
+        if (!"APPROVED".equalsIgnoreCase(problem.getStatus())) {
+            boolean isAuthor = (currentUserId != null && problem.getCreatedByUserId() != null && problem.getCreatedByUserId().equals(currentUserId));
+            boolean isAdmin = (currentUser != null && currentUser.isAdmin());
+            if (!isAuthor && !isAdmin) {
+                redirectAttributes.addFlashAttribute("errorMessage", "This problem statement is currently pending administrator verification.");
+                return "redirect:/problems";
+            }
+        }
+
         model.addAttribute("problem", problem);
 
         // Fetch previous student solutions for this problem statement
@@ -133,8 +144,8 @@ public class ProblemController {
         }
 
         problem.setCreatedByUserId(currentUser.getId());
-        // If posted by admin or faculty, auto-approve; otherwise set to PENDING for review
-        if (currentUser.isAdmin() || currentUser.isFaculty()) {
+        // Only Admin gets auto-approved. Organizations and Faculty submissions must be PENDING for admin review/acceptance!
+        if (currentUser.isAdmin()) {
             problem.setStatus("APPROVED");
             problem.setVerified(true);
         } else {
@@ -148,8 +159,15 @@ public class ProblemController {
                 redirectAttributes.addFlashAttribute("successMessage", "Problem statement published successfully!");
                 return "redirect:/problems/" + newId;
             } else {
-                redirectAttributes.addFlashAttribute("successMessage", "Problem submitted successfully! It will be reviewed before publishing.");
-                return "redirect:/problems";
+                redirectAttributes.addFlashAttribute("successMessage",
+                        "Problem statement submitted successfully! It is now pending administrator review and will appear in the catalogue once accepted.");
+                if (currentUser.isOrganization()) {
+                    return "redirect:/org/dashboard";
+                } else if (currentUser.isFaculty()) {
+                    return "redirect:/faculty/dashboard";
+                } else {
+                    return "redirect:/problems";
+                }
             }
         } else {
             redirectAttributes.addFlashAttribute("errorMessage", "Failed to submit problem. Please check required fields.");

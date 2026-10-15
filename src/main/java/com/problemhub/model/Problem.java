@@ -39,8 +39,8 @@ public class Problem {
     private boolean bookmarkedByCurrentUser;
 
     public Problem() {
-        this.status = "APPROVED";
-        this.verified = true;
+        this.status = "PENDING";
+        this.verified = false;
         this.viewsCount = 0;
     }
 

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -73,16 +74,36 @@ public class AdminController {
     }
 
     @PostMapping("/problems/{id}/approve")
-    public String approveProblem(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
+    public String approveProblem(@PathVariable("id") int id,
+                                 @RequestParam(value = "redirect", required = false) String redirect,
+                                 HttpSession session,
+                                 RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null || !currentUser.isAdmin()) {
+            return "redirect:/login";
+        }
         problemService.updateStatus(id, "APPROVED", true);
-        redirectAttributes.addFlashAttribute("successMessage", "Problem #" + id + " approved and published!");
+        redirectAttributes.addFlashAttribute("successMessage", "Problem #" + id + " has been accepted and published to students!");
+        if (redirect != null && !redirect.trim().isEmpty()) {
+            return "redirect:" + redirect;
+        }
         return "redirect:/admin";
     }
 
     @PostMapping("/problems/{id}/reject")
-    public String rejectProblem(@PathVariable("id") int id, RedirectAttributes redirectAttributes) {
+    public String rejectProblem(@PathVariable("id") int id,
+                                @RequestParam(value = "redirect", required = false) String redirect,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+        User currentUser = (User) session.getAttribute("currentUser");
+        if (currentUser == null || !currentUser.isAdmin()) {
+            return "redirect:/login";
+        }
         problemService.updateStatus(id, "REJECTED", false);
         redirectAttributes.addFlashAttribute("infoMessage", "Problem #" + id + " has been rejected.");
+        if (redirect != null && !redirect.trim().isEmpty()) {
+            return "redirect:" + redirect;
+        }
         return "redirect:/admin";
     }
 

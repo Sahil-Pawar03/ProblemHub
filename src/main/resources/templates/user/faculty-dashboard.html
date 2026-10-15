@@ -259,7 +259,8 @@
                                 <td><span class="badge-domain" th:text="${fp.domain}">Domain</span></td>
                                 <td th:text="${fp.difficulty}">Intermediate</td>
                                 <td>
-                                    <span class="badge bg-success-subtle text-success border border-success-subtle" th:text="${fp.status}">APPROVED</span>
+                                    <span th:class="${fp.status == 'APPROVED' ? 'badge bg-success-subtle text-success border border-success-subtle' : (fp.status == 'PENDING' ? 'badge bg-warning-subtle text-dark border border-warning-subtle' : 'badge bg-danger-subtle text-danger border border-danger-subtle')}"
+                                          th:text="${fp.status}">APPROVED</span>
                                 </td>
                                 <td class="text-end">
                                     <a th:href="@{'/problems/' + ${fp.id}}" class="btn btn-outline-custom btn-sm">View Details</a>

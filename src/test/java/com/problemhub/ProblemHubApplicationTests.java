@@ -182,4 +182,27 @@ class ProblemHubApplicationTests {
                 !testSolution.getSubmittedByUserId().equals(reviewer.getId());
         assertTrue(isIndependentReview, "Independent user rating should be permitted");
     }
+
+    @Test
+    @DisplayName("TC012: Problem Moderation - Default state is PENDING and only ADMIN auto-approves")
+    void testProblemModerationDefaultPending() {
+        // Test default problem creation state
+        Problem newProblem = new Problem();
+        assertEquals("PENDING", newProblem.getStatus(), "Default status of any new problem must be PENDING");
+        assertFalse(newProblem.isVerified(), "Default problem must not be verified until admin approval");
+
+        // Role-based approval rules: Only Admin gets auto-approved
+        User admin = new User();
+        admin.setRole("ADMIN");
+        assertTrue(admin.isAdmin(), "Admin is authorized for immediate auto-approval");
+
+        User faculty = new User();
+        faculty.setRole("FACULTY");
+        assertFalse(faculty.isAdmin(), "Faculty must not bypass admin moderation");
+
+        User org = new User();
+        org.setRole("ORGANIZATION");
+        assertFalse(org.isAdmin(), "Organizations must not bypass admin moderation");
+    }
 }
+
